@@ -1,5 +1,11 @@
 # Next Actions
 
+> Founder creative directive (2026-11-17): `docs/design/CREATIVE_DIRECTIVE.md`. Design work runs as D1→D8
+> (TASK_BOARD TB-17…TB-24), interleaved with engineering (TB-06 auth, TB-07/TB-22 map).
+> Current home = "Companion World" (FD-01/02 in DECISION_LOG) — keep its structure; D1/D2 restyle it.
+
+**Next up: TB-17 (D1 brand & tokens), then TB-18 (D2 character system).**
+
 The next session should start here, in this order. Each item is executable without asking the founder.
 
 1. **Verify the checkpoint**: `pnpm install && pnpm --filter @salaam/domain build && pnpm typecheck && pnpm test` (needs a migrated `*_test` DB; see docs/LOCAL_DEVELOPMENT.md). Expect 31 passing tests.
