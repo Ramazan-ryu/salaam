@@ -14,8 +14,10 @@ Only results that were actually executed are recorded here.
 | Web image runtime set: standalone server, `/`, `/discover`, `/staff/review` | executed natively | ✅ 200 |
 | Backup → restore into fresh DB | `make backup`, `infra/scripts/restore.sh` | ✅ identical row counts |
 | Visual check (Playwright + Chrome), mobile 390×844 and desktop 1366×860 | `design/screenshots/01–07` | ✅ no console errors |
-| `docker compose up` on a Docker engine | — | ❌ not run: base images cannot be pulled here (BL-03) |
-| GitHub Actions CI | — | ⏳ will run after the repository is pushed (BL-01) |
+| `docker compose --profile full up --wait` on a real Docker engine | GitHub Actions job `docker-images` | ✅ db healthy → migrate exited 0 → api healthy → web up; health, home and discover smoke checks pass |
+| GitHub Actions CI (typecheck, migrate, 31 tests, build, compose config) | job `check`, run 43959151498 | ✅ |
+
+First CI run failed: Turborepo strict env mode hid `TEST_DATABASE_URL` from jest (local runs read `.env`). Reproduced locally without `.env` (25 failed), fixed via `passThroughEnv` (31 passed).
 
 ### What the tests prove
 - Pending or rejected submissions are never public; only a curator decision publishes (D-25), backed by a DB CHECK.

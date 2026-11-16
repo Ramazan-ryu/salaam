@@ -3,7 +3,7 @@
 Newest first. Short, factual entries; details live in commits.
 
 ## 2026-11-17 — Repository published
-- Founder installed the Claude GitHub App; `main` pushed to github.com/Ramazan-ryu/salaam (4 commits). CI triggered on push.
+- Founder installed the Claude GitHub App; `main` pushed to github.com/Ramazan-ryu/salaam (4 commits). First CI run failed (Turborepo strict env hid TEST_DATABASE_URL) → fixed; CI green incl. full Docker stack smoke test → BL-03 closed.
 
 ## 2026-11-17 — M-VS1 first vertical slice
 - Public web: avatar-first home (Concept A), Now/Tonight/Weekend lenses, Discover with category filter and "near me" (coarse geohash, radius), event details (trust, source, unconfirmed fields, map link, .ics), az/ru/en switch.

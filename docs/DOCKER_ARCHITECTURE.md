@@ -1,6 +1,6 @@
 # Docker Architecture (local development)
 
-Status: implemented · config validated · 2026-11-17 · see BLOCKERS BL-03 for what could not be run here
+Status: tested in CI (images build, full stack healthy, smoke tests) · 2026-11-17
 
 Design goals: one command to start everything, laptop-friendly (≤16 GB RAM), nothing listening beyond
 `127.0.0.1`, no secrets in images, and the same API image for migrations and serving.
@@ -99,4 +99,4 @@ itself calls the API at `API_INTERNAL_URL` (`http://api:4000` inside the network
 | API HEALTHCHECK command | ✅ exit 0 |
 | Web standalone server serving public + staff pages against the API | ✅ |
 | Backup → restore into a fresh database | ✅ identical counts |
-| Pull base images / `docker compose up` | ❌ not possible here: Docker Hub is blocked by this environment's network policy (BL-03). Run `make up` on your machine. |
+| Build images + `docker compose --profile full up --wait` + smoke tests | ✅ in GitHub Actions (`docker-images` job). Not possible in the Claude workspace itself (Docker Hub blocked there). |

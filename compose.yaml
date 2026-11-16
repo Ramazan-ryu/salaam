@@ -35,6 +35,7 @@ services:
     profiles: ["full"]
     build: { context: ., dockerfile: infra/docker/api.Dockerfile }
     image: salaam/api:dev
+    pull_policy: build
     environment:
       DATABASE_URL: *db-url
       NODE_ENV: development
@@ -46,6 +47,7 @@ services:
   api:
     profiles: ["full"]
     image: salaam/api:dev
+    pull_policy: never # built by the migrate service
     environment:
       DATABASE_URL: *db-url
       NODE_ENV: development
@@ -66,6 +68,7 @@ services:
       args:
         NEXT_PUBLIC_API_URL: http://localhost:4000 # what the browser on your machine calls
     image: salaam/web:dev
+    pull_policy: build
     environment:
       API_INTERNAL_URL: http://api:4000 # what the web server calls inside the Docker network
     ports:

@@ -34,7 +34,7 @@ against whatever the backend happens to return. That is how ADR-0020 intends it.
 | 5 | API contract | What data crosses the wire? | `docs/API_SPECIFICATION.md`, request schemas in `packages/domain` + controllers (zod), errors RFC 9457 | Schema is validated at the edge; contract test exists | ⚠️ zod schemas + spec doc only; machine-readable OpenAPI not generated yet (TB-05) |
 | 6 | Backend | Business rules and request handling | `apps/api/src/modules/*` (catalog, sources, events, organizer, review) | Authorization + validation + audit in the same transaction | ✅ |
 | 7 | Database | Storage and retrieval | `apps/api/src/db/schema.ts`, `apps/api/drizzle/*.sql`, PostGIS + pg_trgm | Migration reviewed; constraints enforce invariants (e.g. publish CHECK) | ✅ |
-| 8 | Docker environment | Start all required services with one command | `compose.yaml`, `infra/docker/*.Dockerfile`, `Makefile` | `docker compose config` valid; images build; healthchecks green; smoke test | ⚠️ config validated and runtime file sets executed natively; containers not run here (registry blocked, BL-03) |
+| 8 | Docker environment | Start all required services with one command | `compose.yaml`, `infra/docker/*.Dockerfile`, `Makefile` | `docker compose config` valid; images build; healthchecks green; smoke test | ✅ images build and full stack runs healthy in CI with smoke tests |
 | 9 | Testing & validation | Does the whole chain work? | `apps/api/test/*.spec.ts` (real PostGIS), Playwright screenshot script, `TEST_RESULTS.md` | All tests pass; screenshots match design; security checklist reviewed | ✅ 31 integration tests; screenshots for the public slice |
 
 ## 2. Request lifecycle for one feature (Discover nearby)
