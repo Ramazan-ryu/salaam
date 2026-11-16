@@ -41,4 +41,4 @@ None in progress at end of session. Next: see NEXT_ACTIONS.md.
 2. **Auth decision** — staff/organizer access is a dev stand-in; nothing can go to production before S-AUTH.
 3. **Docker unverified on a real engine** — config and image contents verified, `docker compose up` not yet run (BL-03).
 4. **Solo-founder review load** — D-25 requires a human for every publication; queue tooling must stay fast.
-5. **Repository not yet on GitHub** — work exists only as local commits + delivered bundles (BL-01).
+5. **Credentials posted in chat** — a token and the GitHub password must be rotated by the founder (FA-02).
