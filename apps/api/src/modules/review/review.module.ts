@@ -24,7 +24,7 @@ import { PublicationService } from '../events/publication.service';
 
 const REJECT_REASONS = ['not_permitted', 'insufficient_info', 'duplicate', 'out_of_scope', 'spam', 'other'] as const;
 
-const decisionSchema = z.discriminatedUnion('decision', [
+export const decisionSchema = z.discriminatedUnion('decision', [
   z.object({
     decision: z.literal('approve'),
     placeId: z.string().uuid().optional(),

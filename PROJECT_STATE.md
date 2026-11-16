@@ -25,7 +25,7 @@ organizer submissions and publish them; nothing becomes public without a person 
 |---|---|---|
 | 1 Research | ✅ | INTEGRATION_RESEARCH, DATA_SOURCES_REGISTER (Phase 1) |
 | 2 Design | ⚠️ partial | Concept A implemented; design-system package (tokens JSON, component specs) open — TB-14 |
-| 3 Architecture | ⚠️ partial | Modules, DB, security defined; machine-readable OpenAPI missing — TB-05 |
+| 3 Architecture | ✅ | Modules, DB, security defined; OpenAPI 3.1 contract enforced by tests (TB-05) |
 | 4 Engineering foundation | ✅ | Native + Docker; CI green on every push |
 | 5 Feature quality | ✅ for F-01…F-11 | see docs/FEATURE_TRACEABILITY_MATRIX.md |
 | 6 Integration | ⚠️ | No external providers yet; synthetic data isolated (F-11); E2E is scripted screenshots, not assertions — TB-12 |
@@ -33,7 +33,7 @@ organizer submissions and publish them; nothing becomes public without a person 
 
 ## Active work
 
-None in progress at end of session. Next: see NEXT_ACTIONS.md.
+TB-06 spike S-AUTH (sign-in). See NEXT_ACTIONS.md.
 
 ## Known risks (top 5; full list in docs/RISKS_AND_OPEN_QUESTIONS.md)
 

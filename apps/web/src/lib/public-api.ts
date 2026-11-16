@@ -1,38 +1,11 @@
 import type { Locale } from './i18n';
 
-/** Shape of an item returned by GET /v1/discover and GET /v1/occurrences/:id (SALAAM-owned API). */
-export interface OccurrenceItem {
-  id: string;
-  startsAt: string;
-  endsAt: string | null;
-  timeUnknown: boolean;
-  lifecycle: 'scheduled' | 'cancelled' | 'postponed' | 'rescheduled' | 'ended' | string;
-  availability: string;
-  event: {
-    id: string;
-    title: string | null;
-    description: string | null;
-    locale: string | null;
-    translated: boolean;
-    categories: string[];
-    ticketUrl: string | null;
-    price?: { isFree: boolean | null; min: number | null; max: number | null; currency: string | null };
-  };
-  place: { id: string; name: string | null; kind: string; location: { lat: number; lng: number }; distanceKm?: number };
-  trust: { tier: string; verification: string; lastVerifiedAt: string | null; badge: string; unconfirmedFields: string[] };
-  attribution: { sourceName: string | null; url: string | null; synthetic?: boolean };
-}
+import type { components } from './api-types';
 
-export interface DiscoverResponse {
-  lens: string;
-  window: { from: string; to: string };
-  items: OccurrenceItem[];
-}
-
-export interface Category {
-  slug: string;
-  name: Partial<Record<Locale, string>>;
-}
+/** Types generated from docs/openapi.json (`pnpm --filter @salaam/web api:types`) — never hand-written. */
+export type OccurrenceItem = components['schemas']['OccurrenceItem'];
+export type DiscoverResponse = components['schemas']['DiscoverResponse'];
+export type Category = components['schemas']['Category'];
 
 /** Server-side base URL (inside Docker the API is reachable by service name). */
 export const serverApiUrl = () => process.env.API_INTERNAL_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';

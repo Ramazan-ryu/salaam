@@ -6,7 +6,8 @@
     "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start -p 3000",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "api:types": "openapi-typescript ../../docs/openapi.json -o src/lib/api-types.ts"
   },
   "dependencies": {
     "@salaam/domain": "workspace:*",
@@ -18,6 +19,7 @@
     "@types/node": "^22.15.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
+    "openapi-typescript": "^7.13.0",
     "typescript": "^5.8.0"
   }
 }

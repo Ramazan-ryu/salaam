@@ -39,6 +39,11 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm typecheck
+      - name: API contract is up to date (docs/openapi.json + generated web types)
+        run: |
+          pnpm --filter @salaam/api openapi:generate
+          pnpm --filter @salaam/web api:types
+          git diff --exit-code docs/openapi.json apps/web/src/lib/api-types.ts
       - name: Migrate test database
         run: pnpm --filter @salaam/api exec ts-node --transpile-only src/db/migrate.ts
         env:

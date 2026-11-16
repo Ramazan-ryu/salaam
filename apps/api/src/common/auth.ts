@@ -23,8 +23,8 @@ export interface Actor {
   role: Role;
 }
 
-const PUBLIC_KEY = 'salaam:public';
-const ROLES_KEY = 'salaam:roles';
+export const PUBLIC_KEY = 'salaam:public';
+export const ROLES_KEY = 'salaam:roles';
 
 export const Public = () => SetMetadata(PUBLIC_KEY, true);
 export const Roles = (...roles: Role[]) => SetMetadata(ROLES_KEY, roles);

@@ -20,7 +20,7 @@ import { organizerMembers, organizers, reviewTasks, sourceItems } from '../../db
 import { AuditService } from '../audit/audit.service';
 import { SourcesModule, SourcesService } from '../sources/sources.module';
 
-const createOrganizerSchema = z.object({
+export const createOrganizerSchema = z.object({
   name: localizedTextSchema,
   website: z.string().url().optional(),
   instagramHandle: z.string().max(60).optional(),

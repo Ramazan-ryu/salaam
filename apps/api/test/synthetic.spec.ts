@@ -39,6 +39,11 @@ describe('Synthetic data isolation (production mode)', () => {
     expect(res.body.items).toHaveLength(0);
   });
 
+  it('does not expose the API docs in production', async () => {
+    await ctx.http().get('/v1/openapi.json').expect(404);
+    await ctx.http().get('/v1/docs').expect(404);
+  });
+
   it('staff endpoints are closed when DEV_AUTH is off (no real auth yet)', async () => {
     const res = await ctx.http().get('/v1/admin/events').set({ 'x-dev-user-id': 'a', 'x-dev-role': 'admin' }).expect(401);
     expect(res.body.code).toBe('AUTH_NOT_CONFIGURED');

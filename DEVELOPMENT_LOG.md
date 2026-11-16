@@ -2,6 +2,12 @@
 
 Newest first. Short, factual entries; details live in commits.
 
+## 2026-11-17 — TB-05 API contract
+- OpenAPI 3.1 generated from the zod schemas → `docs/openapi.json`; `/v1/openapi.json` + Swagger UI `/v1/docs` outside production.
+- Web types generated from the spec (`apps/web/src/lib/api-types.ts`), replacing hand-written types.
+- Contract tests: route + access coverage via Nest metadata, strict public response schemas, drift; CI regenerates and diffs.
+- Found and fixed: public place endpoint returned raw DB rows (internal columns); documented role of POST /v1/admin/sources was wrong (caught by the access test design).
+
 ## 2026-11-17 — Repository published
 - Founder installed the Claude GitHub App; `main` pushed to github.com/Ramazan-ryu/salaam (4 commits). First CI run failed (Turborepo strict env hid TEST_DATABASE_URL) → fixed; CI green incl. full Docker stack smoke test → BL-03 closed.
 

@@ -34,7 +34,7 @@ import { SourcesModule, SourcesService } from '../sources/sources.module';
 import { DiscoverService } from './discover.service';
 import { PublicationService } from './publication.service';
 
-const discoverSchema = z.object({
+export const discoverSchema = z.object({
   lens: z.enum(['now', 'tonight', 'weekend', 'date']).default('tonight'),
   date: z
     .string()
@@ -47,7 +47,7 @@ const discoverSchema = z.object({
 });
 
 /** Curator manual entry (DS-001): facts verified from an official source link. */
-const manualEventSchema = z.object({
+export const manualEventSchema = z.object({
   placeId: z.string().uuid(),
   organizerId: z.string().uuid().optional(),
   title: localizedTextSchema,
@@ -61,7 +61,7 @@ const manualEventSchema = z.object({
   trustTier: z.enum(['T1_official', 'T3_organizer_submitted', 'T4_community_submitted']).default('T1_official'),
 });
 
-const lifecycleSchema = z.object({
+export const lifecycleSchema = z.object({
   lifecycleStatus: z.enum(LIFECYCLE_STATUSES),
   availability: z.enum(AVAILABILITY).optional(),
   reason: z.string().min(3).max(500),

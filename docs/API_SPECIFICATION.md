@@ -2,7 +2,11 @@
 
 Status: Draft 0.2 · 2026-11-16 (Phase 1.1 corrections) · Related: [ADR-0020](./adr/ADR-0020-api-rest-openapi-contract-first.md), [DATABASE_DESIGN.md](./DATABASE_DESIGN.md), [SECURITY_AND_PRIVACY.md](./SECURITY_AND_PRIVACY.md)
 
-> Contract-first: the OpenAPI document will be written in P-2 from this specification before implementation. No code is generated now.
+> **Source of truth for implemented endpoints: [`docs/openapi.json`](./openapi.json)** (OpenAPI 3.1), generated from the zod
+> schemas the API validates with (`apps/api/src/openapi/`). Browse it at http://localhost:4000/v1/docs when the API runs
+> outside production. Web types are generated from it (`apps/web/src/lib/api-types.ts`). Tests fail if a served route is
+> undocumented, if documented access differs from `@Roles`/`@Public`, if a public response has an undocumented field, or
+> if the committed files are stale. This document stays the design-level specification for endpoints not built yet.
 
 ## 1. Conventions
 

@@ -4,6 +4,8 @@ Integration statuses: CONNECTED · VERIFIED · AVAILABLE_WITH_CREDENTIALS · PAR
 
 ## SALAAM-owned endpoints (all FIRST_PARTY)
 
+Machine-readable contract: [`docs/openapi.json`](./docs/openapi.json) — this table is a human summary of it.
+
 | Endpoint | Auth | Status | Tests |
 |---|---|---|---|
 | `GET /v1/health` | public | TESTED | smoke |
@@ -18,7 +20,7 @@ Integration statuses: CONNECTED · VERIFIED · AVAILABLE_WITH_CREDENTIALS · PAR
 | `POST/GET /v1/organizer/:orgId/submissions` | organizer member | TESTED | review-flow |
 | `GET /v1/admin/review-tasks`, `GET :id`, `POST :id/decision` | curator | TESTED | review-flow |
 | `/v1/auth`, `/v1/me`, saved items, reports | — | NOT_STARTED | — |
-| `/v1/openapi.json`, Swagger UI | — | NOT_STARTED (TB-05) | — |
+| `GET /v1/openapi.json`, Swagger UI `GET /v1/docs` | public, **non-production only** | TESTED | openapi.spec, synthetic.spec (404 in production) |
 
 ## Data sources / external providers
 

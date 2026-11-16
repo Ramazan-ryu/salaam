@@ -16,4 +16,8 @@ This file records engineering decisions taken autonomously during implementation
 | ED-09 | 2026-11-17 | Separate `prod-deps` Docker stage | Removed compilers/test tools: 206 MB → 47 MB app files | `pnpm deploy` (packlist drops `dist/` via .gitignore) | Yes |
 | ED-10 | 2026-11-17 | Next.js `output: 'standalone'` for the web image | Small self-contained server | Full `node_modules` image | Yes |
 | ED-11 | 2026-11-17 | Only implemented destinations in the tab bar (Home, Discover) | Directive: never present mockups as working features | Show Saved/Profile as disabled | Yes |
+| ED-13 | 2026-11-17 | OpenAPI from zod via `@asteasolutions/zod-to-openapi` v7 (MIT) | Single source of truth = validation schemas; no decorators on every route | `nestjs-zod` + `@nestjs/swagger` (heavier, decorator-driven); hand-written YAML (drifts) | Yes |
+| ED-14 | 2026-11-17 | Web types generated with `openapi-typescript` (MIT); no generated SDK | Compile-time contract for the web with zero runtime code | openapi-fetch / orval SDK | Yes |
+| ED-15 | 2026-11-17 | Swagger UI from `swagger-ui-dist` (Apache-2.0) served by the API, non-production only | No CDN, no extra service | Separate docs site | Yes |
+| ED-16 | 2026-11-17 | Public `GET /v1/places/:id` and `/v1/categories` return explicit public shapes | Contract work found raw DB rows (normalized names, geometry, timestamps) exposed | — | No (privacy/hygiene) |
 | ED-12 | 2026-11-17 | Discover responses: `Cache-Control: private, no-store` when an area is sent, `Vary` on language/area | API spec privacy rule | — | No (privacy rule) |

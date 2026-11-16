@@ -2,6 +2,14 @@
 
 Only results that were actually executed are recorded here.
 
+## 2026-11-17 (TB-05 API contract)
+
+| Suite / check | Result |
+|---|---|
+| API tests (real PostGIS) | ✅ 38/38 — new `openapi.spec` (6): served routes = documented routes, documented access = `@Roles`/`@Public` for all 23 routes, committed spec up to date, docs served in dev, strict public response schemas, no internal columns leaked, RFC 9457 errors; `synthetic.spec` +1: docs are 404 in production |
+| Typecheck + build (web uses generated API types) | ✅ |
+| Swagger UI renders all routes | ✅ `design/screenshots/09-api-docs-swagger.png` |
+
 ## 2026-11-17 (M-VS1)
 
 | Suite / check | Command | Result |

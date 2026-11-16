@@ -105,11 +105,23 @@ export class CatalogService {
     if (!place || place.verificationStatus === 'pending_review' || place.verificationStatus === 'rejected') {
       throw new ProblemError(404, 'PLACE_NOT_FOUND', 'Place not found');
     }
-    return place;
+    // Public shape only: never expose internal columns (normalized names, raw geometry, timestamps).
+    return {
+      id: place.id,
+      name: place.name,
+      kind: place.kind,
+      address: place.address ?? null,
+      location: { lat: place.lat, lng: place.lng },
+      website: place.website ?? null,
+      trust: { tier: place.trustTier, verification: place.verificationStatus, lastVerifiedAt: place.lastVerifiedAt?.toISOString() ?? null },
+    };
   }
 
   listCategories() {
-    return this.db.select().from(categories).orderBy(asc(categories.sort));
+    return this.db
+      .select({ slug: categories.slug, name: categories.name, sort: categories.sort })
+      .from(categories)
+      .orderBy(asc(categories.sort));
   }
 
   listDistricts(citySlug: string) {

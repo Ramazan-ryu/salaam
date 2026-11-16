@@ -1,6 +1,8 @@
 # ADR-0020: REST + OpenAPI, contract-first
 
-Status: Proposed · 2026-11-14
+Status: Accepted (implemented 2026-11-17) · 2026-11-14
+
+Implementation: OpenAPI 3.1 generated from zod (`@asteasolutions/zod-to-openapi`), committed as `docs/openapi.json`; web types via `openapi-typescript`; drift and route/access/response contract tests in CI. Clients are type-generated rather than full generated SDKs (lighter for a solo team).
 
 ## Context
 Mobile and web clients need a stable, typed API; AI-assisted development benefits from an explicit contract.

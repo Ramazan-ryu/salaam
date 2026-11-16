@@ -28,7 +28,7 @@ import { AuditService } from '../audit/audit.service';
 
 export type Source = typeof sources.$inferSelect;
 
-const createSourceSchema = z.object({
+export const createSourceSchema = z.object({
   code: z.string().regex(/^DS-\d{3}$/),
   name: z.string().min(2).max(200),
   connectorType: z.enum(CONNECTOR_TYPES),
@@ -39,8 +39,8 @@ const createSourceSchema = z.object({
   attribution: z.string().max(300).optional(),
   retentionDays: z.number().int().min(1).max(365).default(90),
 });
-const statusSchema = z.object({ status: z.enum(SOURCE_STATUSES), note: z.string().max(500).optional() });
-const automationSchema = z.object({ level: z.enum(AUTOMATION_LEVELS), reason: z.string().min(5).max(500) });
+export const statusSchema = z.object({ status: z.enum(SOURCE_STATUSES), note: z.string().max(500).optional() });
+export const automationSchema = z.object({ level: z.enum(AUTOMATION_LEVELS), reason: z.string().min(5).max(500) });
 
 @Injectable()
 export class SourcesService {
