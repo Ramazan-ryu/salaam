@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from 'next';
+import '@fontsource-variable/inter';
+import '@fontsource-variable/unbounded';
 import { getLocale } from '@/lib/locale-server';
 
 export const metadata: Metadata = {

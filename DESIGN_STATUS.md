@@ -8,7 +8,9 @@
 | Discover screen | Implemented interface | Built from Concept A tokens | screenshots 03, 07 |
 | Event details | Implemented interface | Trust + source + unconfirmed fields visible | screenshots 04, 05 |
 | Staff portal | Implemented interface (utility styling) | Works; not yet in the public design language (TB-16) | screenshot 08 |
-| Avatar | Placeholder SVG, full body, separate head/arms/torso/legs, 3 moods + mixed, reduced-motion | **Not final art** — final art via TB-15 | `components.tsx`; spec `docs/AVATAR_ART_SPEC.md` |
+| Avatar | v2 SVG rig: semi-stylised adult, clay-style shading, rim light, 3 moods + mixed, reduced-motion | **Not final art** — illustrated/3D-look rig via TB-18; image generation not available in this environment |
+| Scene | Baku waterfront by time of day, walkers, glowing windows | Implemented; screenshots 13–15 |
+| Brand | Logo symbol (greeting bubble + sun) + `salaam` wordmark in Unbounded | First version; full brand kit in TB-17 | `components.tsx`; spec `docs/AVATAR_ART_SPEC.md` |
 | Design tokens | In CSS variables | JSON/Figma-compatible export open (TB-14) | `public.css` |
 | Figma | — | No connector in this environment (BL-06) | — |
 

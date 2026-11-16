@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { fmtKm, fmtWhen, type Dict, type Locale } from '@/lib/i18n';
+import { dayBadge, fmtKm, fmtWhen, type Dict, type Locale } from '@/lib/i18n';
 import { priceLabel, type OccurrenceItem } from '@/lib/public-api';
 
 /**
@@ -67,11 +67,17 @@ const ART: Record<string, { bg: string; fg: string; icon: React.ReactNode }> = {
 };
 const DEFAULT_ART = { bg: '#EDE8DF', fg: '#5F5B66', icon: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></> };
 
-export function CategoryArt({ category }: { category?: string }) {
+export function CategoryArt({ category, badge }: { category?: string; badge?: { day: number; mon: string } }) {
   const a = (category && ART[category]) || DEFAULT_ART;
   return (
-    <div className="card-art" style={{ background: a.bg, color: a.fg }}>
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <div className="card-art" style={{ background: `linear-gradient(135deg, ${a.bg} 0%, ${a.fg}33 100%)`, color: a.fg }}>
+      {badge && (
+        <span className="date-badge">
+          <b>{badge.day}</b>
+          <small>{badge.mon}</small>
+        </span>
+      )}
+      <svg width="40" height="40" viewBox="0 0 24 24" style={{ position: 'relative', zIndex: 1 }} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         {a.icon}
       </svg>
     </div>
@@ -95,7 +101,7 @@ export function EventCard({ item, t, locale }: { item: OccurrenceItem; t: Dict; 
   const when = item.timeUnknown ? `${fmtWhen(item.startsAt, locale, { timeUnknown: true })} · ${t.timeTbc}` : fmtWhen(item.startsAt, locale);
   return (
     <Link href={`/e/${item.id}`} className="card">
-      <CategoryArt category={item.event.categories[0]} />
+      <CategoryArt category={item.event.categories[0]} badge={dayBadge(item.startsAt, locale)} />
       <h3>{item.event.title}</h3>
       <p className="card-meta">
         {when} · {item.place.name}

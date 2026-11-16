@@ -20,6 +20,8 @@ This file records engineering decisions taken autonomously during implementation
 | FD-02 | 2026-11-17 | **Founder direction:** companion is alive with moods — calm, energetic, curious, and "mixed" (cycles); mood also steers the suggestion via ordered category preferences | Founder feedback: "more alive… 2–3 moods mixed" | Single idle animation | Yes |
 | ED-17 | 2026-11-17 | Expressions drawn once, switched by CSS mood classes; motion only under `prefers-reduced-motion: no-preference` | Works without JS (snapshot) and respects accessibility | React-conditional mouths | Yes |
 | ED-18 | 2026-11-17 | Lists show one card per event (soonest occurrence); counts are events, not dates | Repeated cards for multi-date events looked broken | — | Yes |
+| ED-19 | 2026-11-17 | Fonts: Inter (body) + Unbounded (display), self-hosted via @fontsource (OFL) | Covers ə/ğ/ş, Cyrillic, ₼; no external font CDN at runtime | Google Fonts CDN, Manrope | Yes |
+| ED-20 | 2026-11-17 | Home scene follows Baku time of day; `?tod=` override only for design review | "Adaptive home" (directive §14) without fake data | Static scene | Yes |
 | ED-13 | 2026-11-17 | OpenAPI from zod via `@asteasolutions/zod-to-openapi` v7 (MIT) | Single source of truth = validation schemas; no decorators on every route | `nestjs-zod` + `@nestjs/swagger` (heavier, decorator-driven); hand-written YAML (drifts) | Yes |
 | ED-14 | 2026-11-17 | Web types generated with `openapi-typescript` (MIT); no generated SDK | Compile-time contract for the web with zero runtime code | openapi-fetch / orval SDK | Yes |
 | ED-15 | 2026-11-17 | Swagger UI from `swagger-ui-dist` (Apache-2.0) served by the API, non-production only | No CDN, no extra service | Separate docs site | Yes |

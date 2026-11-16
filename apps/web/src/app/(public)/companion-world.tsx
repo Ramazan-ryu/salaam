@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { Dict } from '@/lib/i18n';
 import type { Mood } from '@/lib/moods';
 import { AvatarAlive } from './avatar-alive';
-import { Skyline } from './components';
+import { BakuScene, type TimeOfDay } from './scene';
 
 /**
  * Avatar-centred home stage (founder direction 2026-11-17): the companion stands in the middle and the
@@ -14,7 +14,7 @@ export interface WorldItem {
   label: string;
   href: string;
   count?: number;
-  tone: { bg: string; fg: string };
+  tone: { bg: string; fg: string; glow: string };
   icon: React.ReactNode;
 }
 
@@ -33,13 +33,13 @@ export const ITEM_ICONS = {
   near: I(<><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></>),
 };
 
-export const ITEM_TONES: Record<string, { bg: string; fg: string }> = {
-  music: { bg: '#F6E3D6', fg: '#B4472A' },
-  exhibition_culture: { bg: '#FFFFFF', fg: '#0D5F5B' },
-  workshop_talk: { bg: '#E7E4F3', fg: '#4D3F7A' },
-  cinema: { bg: '#F3E2E6', fg: '#8A2D45' },
-  community_free: { bg: '#E6F0D9', fg: '#3F6A1E' },
-  near: { bg: '#1B1A1F', fg: '#FFFFFF' },
+export const ITEM_TONES: Record<string, { bg: string; fg: string; glow: string }> = {
+  music: { bg: '#FFC9A6', fg: '#B4472A', glow: 'rgba(255, 170, 110, 0.75)' },
+  exhibition_culture: { bg: '#B9E8DF', fg: '#0D5F5B', glow: 'rgba(130, 220, 205, 0.75)' },
+  workshop_talk: { bg: '#D9CCF6', fg: '#4D3F7A', glow: 'rgba(190, 170, 245, 0.75)' },
+  cinema: { bg: '#F8C3CF', fg: '#8A2D45', glow: 'rgba(245, 150, 175, 0.75)' },
+  community_free: { bg: '#CDEBB2', fg: '#3F6A1E', glow: 'rgba(175, 225, 140, 0.75)' },
+  near: { bg: '#A9DDF7', fg: '#0B4F6C', glow: 'rgba(130, 200, 245, 0.8)' },
 };
 
 export function CompanionWorld({
@@ -47,15 +47,17 @@ export function CompanionWorld({
   items,
   bubble,
   mood,
+  tod,
 }: {
   t: Dict;
   items: WorldItem[];
   bubble: React.ReactNode;
   mood?: Mood;
+  tod: TimeOfDay;
 }) {
   return (
-    <section className="world" aria-label={t.avatarLabel}>
-      <Skyline />
+    <section className={`world tod-${tod}`} aria-label={t.avatarLabel}>
+      <BakuScene />
       <div className="world-bubble">{bubble}</div>
       <div className="world-avatar">
         <AvatarAlive label={t.avatarLabel} mood={mood} />
@@ -68,7 +70,10 @@ export function CompanionWorld({
             className={`world-item world-item-${i}`}
             aria-label={`${it.label}${it.count ? `, ${it.count} ${t.eventsCount}` : ''}`}
           >
-            <span className="world-orb" style={{ background: it.tone.bg, color: it.tone.fg }}>
+            <span
+              className="world-orb"
+              style={{ color: it.tone.fg, ['--orb-c' as string]: it.tone.bg, ['--orb-glow' as string]: it.tone.glow } as React.CSSProperties}
+            >
               {it.icon}
               {it.count ? <span className="world-count">{it.count}</span> : null}
             </span>

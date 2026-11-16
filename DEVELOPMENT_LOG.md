@@ -2,6 +2,12 @@
 
 Newest first. Short, factual entries; details live in commits.
 
+## 2026-11-17 — Visual pass v2/v3 (founder: "you can do better", references)
+- Companion v2: semi-stylised adult rig redrawn; "clay" volume (gradients, highlights, warm rim light), hoodie/jeans/sneakers/watch.
+- Baku waterfront scene by Baku time of day (morning/day/evening/night): sky, haze, far/mid skylines with glowing windows, Caspian, blossom tree, strolling people.
+- Glowing objects, quick-action tiles, event cards with date badges; brand: logo + wordmark; fonts Inter + Unbounded (OFL, self-hosted, az/ru/en + ₼).
+- Founder reference images were used for principles only (no assets copied); all art is original SVG/CSS.
+
 ## 2026-11-17 — Companion World (founder feedback)
 - Home redesigned: full-body companion in the centre, 6 objects around it with live counts (link to Discover filtered), moods calm/energetic/curious/mixed.
 - Sample seed made idempotent and richer (8 labelled events across all categories, weekend-aware dates); removed an unlabelled test event and duplicate samples from the dev DB.

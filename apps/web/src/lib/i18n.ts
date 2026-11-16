@@ -36,6 +36,14 @@ const az = {
   itemCommunity: 'İcma',
   itemsLabel: 'Nə etmək istəyirsən?',
   moodLabel: 'Əhval',
+  tileNow: 'İndi nə var?',
+  tileNowSub: 'Növbəti 3 saatda',
+  tileFree: 'Pulsuz və icma',
+  tileFreeSub: 'Könüllülük, klublar, görüşlər',
+  tileNear: 'Yaxınlıqda',
+  tileNearSub: 'Təxmini yerinə görə',
+  tileWeekend: 'Həftəsonu planı',
+  tileWeekendSub: 'Cümə 17:00-dan bazara qədər',
   moodMixed: 'Qarışıq',
   moodCalm: 'Sakit',
   moodEnergetic: 'Enerjili',
@@ -107,11 +115,19 @@ const ru: Dict = {
   itemCommunity: 'Сообщества',
   itemsLabel: 'Чем хочешь заняться?',
   moodLabel: 'Настроение',
+  tileNow: 'Что сейчас?',
+  tileNowSub: 'Ближайшие 3 часа',
+  tileFree: 'Бесплатно и сообщества',
+  tileFreeSub: 'Волонтёрство, клубы, встречи',
+  tileNear: 'Рядом',
+  tileNearSub: 'По примерному району',
+  tileWeekend: 'План на выходные',
+  tileWeekendSub: 'С пятницы 17:00 до воскресенья',
   moodMixed: 'Микс',
   moodCalm: 'Спокойно',
   moodEnergetic: 'Энергично',
   moodCurious: 'Любопытно',
-  suggestCalm: 'Для спокойного вечера:',
+  suggestCalm: 'Если хочется спокойствия:',
   suggestEnergetic: 'Есть энергия?',
   suggestCurious: 'Узнай новое:',
   eventsCount: 'событий',
@@ -176,11 +192,19 @@ const en: Dict = {
   itemCommunity: 'Community',
   itemsLabel: 'What do you feel like doing?',
   moodLabel: 'Mood',
+  tileNow: "What's on now?",
+  tileNowSub: 'The next 3 hours',
+  tileFree: 'Free & community',
+  tileFreeSub: 'Volunteering, clubs, meetups',
+  tileNear: 'Near me',
+  tileNearSub: 'Around your approximate area',
+  tileWeekend: 'Weekend plan',
+  tileWeekendSub: 'Friday 17:00 to Sunday',
   moodMixed: 'Mixed',
   moodCalm: 'Calm',
   moodEnergetic: 'Energetic',
   moodCurious: 'Curious',
-  suggestCalm: 'For a slow evening:',
+  suggestCalm: 'Take it slow:',
   suggestEnergetic: 'Feeling energetic?',
   suggestCurious: 'Discover something new:',
   eventsCount: 'events',
@@ -268,4 +292,16 @@ export function fmtKm(km: number, locale: Locale) {
   if (km < 1) return `${Math.round(km * 1000)} m`;
   const v = km.toFixed(1).replace(/\.0$/, '');
   return `${locale === 'en' ? v : v.replace('.', ',')} km`;
+}
+
+const MON_SHORT: Record<Locale, string[]> = {
+  az: ['yan', 'fev', 'mar', 'apr', 'may', 'iyn', 'iyl', 'avq', 'sen', 'okt', 'noy', 'dek'],
+  ru: ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'],
+  en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+};
+
+/** Day number + short month in Baku time, for date badges. */
+export function dayBadge(iso: string, locale: Locale) {
+  const p = bakuParts(new Date(iso));
+  return { day: p.day, mon: MON_SHORT[locale][p.month]! };
 }
