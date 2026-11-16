@@ -1,6 +1,6 @@
 # Feature Catalog
 
-Status: Draft 0.1 · 2026-11-14 · Related: [PRODUCT_REQUIREMENTS_DOCUMENT.md](./PRODUCT_REQUIREMENTS_DOCUMENT.md), [MVP_SCOPE.md](./MVP_SCOPE.md), [IMPLEMENTATION_ROADMAP.md](./IMPLEMENTATION_ROADMAP.md)
+Status: Draft 0.2 · 2026-11-16 (Phase 1.1 corrections) · Related: [PRODUCT_REQUIREMENTS_DOCUMENT.md](./PRODUCT_REQUIREMENTS_DOCUMENT.md), [MVP_SCOPE.md](./MVP_SCOPE.md), [IMPLEMENTATION_ROADMAP.md](./IMPLEMENTATION_ROADMAP.md)
 
 Priority: **MVP** (in first beta) · **Next** (after MVP, evidence-driven) · **Later** · **Rejected** (with reason). Phase = roadmap phase in which it is built.
 
@@ -35,10 +35,10 @@ Priority: **MVP** (in first beta) · **Next** (after MVP, evidence-driven) · **
 | F-022 | Multilingual search | MVP | ADR-0007 | P-4 |
 | F-023 | Event detail with trust badges & provenance | MVP | Status model | P-3/P-4 |
 | F-024 | Place detail | MVP | — | P-3/P-4 |
-| F-025 | Cinema showtimes (curated or partner) | MVP | DS records | P-3 |
+| F-025 | Cinema showtimes (curated or partner); Lean MVP-1: "now showing" + link-out (D-26) | MVP | DS records | P-3 |
 | F-026 | Rule-based recommendations with "why" | MVP | F-002, F-020 | P-4 |
 | F-027 | Directions & mobility hand-off links | MVP | — | P-4 |
-| F-028 | Public web event/place pages (SEO, share) | MVP | ADR-0004 | P-4 |
+| F-028 | Public web event/place pages (SEO, share) — platform stage S4 | MVP | ADR-0004 | P-3 basic, P-4 polish (earlier only if D-27 approved) |
 
 ## Module — Save & plan
 
@@ -53,7 +53,7 @@ Priority: **MVP** (in first beta) · **Next** (after MVP, evidence-driven) · **
 | ID | Feature | Priority | Depends on | Phase |
 |---|---|---|---|---|
 | F-040 | Friends (request/accept/block) | MVP | F-004 | P-7 |
-| F-041 | Invite deep links (app + web) | MVP | F-028 | P-7 |
+| F-041 | Invite deep links (app + web) | MVP (in Lean MVP-1) | F-028 landing page | P-7 |
 | F-042 | Going/Interested with visibility; friends going | MVP | F-040 | P-7 |
 | F-043 | Follow places/organizers | MVP | — | P-7 |
 | F-044 | Report & block | MVP | F-076 | P-7 |

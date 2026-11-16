@@ -1,6 +1,6 @@
 # Data Sources Register
 
-Status: Draft 0.1 · 2026-11-14 · Related: [INTEGRATION_RESEARCH.md](./INTEGRATION_RESEARCH.md), [AI_CITY_INTELLIGENCE.md](./AI_CITY_INTELLIGENCE.md), [CONTENT_OPERATIONS.md](./CONTENT_OPERATIONS.md)
+Status: Draft 0.2 · 2026-11-16 (Phase 1.1 corrections) · Related: [INTEGRATION_RESEARCH.md](./INTEGRATION_RESEARCH.md), [AI_CITY_INTELLIGENCE.md](./AI_CITY_INTELLIGENCE.md), [CONTENT_OPERATIONS.md](./CONTENT_OPERATIONS.md)
 
 ## 1. Purpose and rule
 
@@ -30,6 +30,8 @@ This register is the **legal and operational gate** for every information source
 | Reviewed by / date | Who approved and when |
 
 ## 3. Initial entries
+
+**Automation levels:** through MVP-1 every source operates at L0/L1, with every item human-approved (D-25). "L1 → L2" means the source may become eligible after MVP-1 if it meets the statistical evidence rules in [CONTENT_OPERATIONS.md](./CONTENT_OPERATIONS.md#5-progressive-automation-ladder).
 
 | DS-id | Name | Connector type | Class | Legal basis | Trust | Auto level (start) | Status |
 |---|---|---|---|---|---|---|---|

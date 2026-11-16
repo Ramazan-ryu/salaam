@@ -1,6 +1,6 @@
 # API Specification (specification level)
 
-Status: Draft 0.1 · 2026-11-14 · Related: [ADR-0020](./adr/ADR-0020-api-rest-openapi-contract-first.md), [DATABASE_DESIGN.md](./DATABASE_DESIGN.md), [SECURITY_AND_PRIVACY.md](./SECURITY_AND_PRIVACY.md)
+Status: Draft 0.2 · 2026-11-16 (Phase 1.1 corrections) · Related: [ADR-0020](./adr/ADR-0020-api-rest-openapi-contract-first.md), [DATABASE_DESIGN.md](./DATABASE_DESIGN.md), [SECURITY_AND_PRIVACY.md](./SECURITY_AND_PRIVACY.md)
 
 > Contract-first: the OpenAPI document will be written in P-2 from this specification before implementation. No code is generated now.
 
@@ -59,7 +59,7 @@ Status: Draft 0.1 · 2026-11-14 · Related: [ADR-0020](./adr/ADR-0020-api-rest-o
 | Method | Path | Purpose |
 |---|---|---|
 | GET | `/home` | Widget descriptors for home ([UX_UI_SPECIFICATION.md](./UX_UI_SPECIFICATION.md#5-home-widget-architecture)) |
-| GET | `/discover` | Params: `lens=now|tonight|weekend|date`, `date`, `categories`, `price=free|paid`, `near=geohash6`, `radiusKm`, `lang`, `cursor` |
+| GET | `/discover` | Params: `lens=now|tonight|weekend|date`, `date`, `categories`, `price=free|paid`, `district`, `radiusKm`, `lang`, `cursor`; optional header `X-Approx-Area: <geohash6>` for "near me" |
 | GET | `/search` | `q`, `type=event|place|film`, locale-aware |
 | GET | `/occurrences/{id}` | Detail incl. event, place, trust, attribution, friends going (visible) |
 | GET | `/events/{id}` | Event with occurrences |
@@ -70,7 +70,7 @@ Status: Draft 0.1 · 2026-11-14 · Related: [ADR-0020](./adr/ADR-0020-api-rest-o
 | GET | `/categories` | Taxonomy |
 | GET | `/recommendations` | Ranked suggestions with `reasons[]` (used by avatar bubble) |
 
-`near` accepts only a coarse geohash (precision ≤6). Precise coordinates are never accepted by discovery endpoints ([SECURITY_AND_PRIVACY.md](./SECURITY_AND_PRIVACY.md#5-location-privacy)).
+The approximate current area travels only in the `X-Approx-Area` header (geohash precision ≤6), never in the URL, so it stays out of access logs, caches and error reports. The header is stripped from logging by configuration. Precise coordinates are never accepted by discovery endpoints. `district` (a district ID the user chose) is the location-free alternative. Responses using either are `Cache-Control: private` ([SECURITY_AND_PRIVACY.md](./SECURITY_AND_PRIVACY.md#5-location-privacy)).
 
 ### 3.4 Saves, reminders, attendance
 

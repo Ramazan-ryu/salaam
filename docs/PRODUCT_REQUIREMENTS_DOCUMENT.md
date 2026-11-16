@@ -1,6 +1,6 @@
 # Product Requirements Document (PRD)
 
-Status: Draft 0.1 · 2026-11-14 · Related: [FEATURE_CATALOG.md](./FEATURE_CATALOG.md), [MVP_SCOPE.md](./MVP_SCOPE.md), [UX_UI_SPECIFICATION.md](./UX_UI_SPECIFICATION.md), [API_SPECIFICATION.md](./API_SPECIFICATION.md)
+Status: Draft 0.2 · 2026-11-16 (Phase 1.1 corrections) · Related: [FEATURE_CATALOG.md](./FEATURE_CATALOG.md), [MVP_SCOPE.md](./MVP_SCOPE.md), [UX_UI_SPECIFICATION.md](./UX_UI_SPECIFICATION.md), [API_SPECIFICATION.md](./API_SPECIFICATION.md)
 
 ## 1. Purpose
 
@@ -9,6 +9,19 @@ Defines what Salaam must do (functional requirements, FR) and how well (non-func
 ## 2. Confirmed constraints
 
 [CONFIRMED 2026-11-14] Solo founder; Claude Code as primary development tool; small budget; no team; Baku pilot; Azerbaijan market; az/ru/en from start; Web + Android + iOS; mobile-first implementation acceptable; human verification initially with progressive automation; partnerships non-blocking; hosting jurisdiction undecided; no full social feed, communities, payments, 3D avatar or transactional integrations in the first MVP.
+
+[CONFIRMED 2026-11-16] Founder capacity 10–15 h/week; platform sequence: (1) admin & organizer web → (2) Android beta → (3) iOS TestFlight → (4) public web pages. Early MVP keeps human approval before every publication.
+
+### 2.1 Platform stages: which requirements apply where
+
+Requirements are **not** expected on every platform at once. Each stage adds platforms; full parity is not required before the planned stage. Lean MVP-1 (D-21, proposed) = stages 1–2.
+
+| Stage | Platform | Requirement groups in scope | Explicitly not required yet |
+|---|---|---|---|
+| **S1** | Admin & organizer web (Next.js) | §4.7 organizer, §4.8 admin, §4.9 pipeline (drafts only), FR-001 sign-in for staff/organizers (email code + Google), FR-004, FR-210–212 | Consumer features on web; Apple sign-in |
+| **S2** | Android app (closed testing → private beta) | §4.1 (email code + Google; Apple not needed on Android), §4.2 avatar, §4.3 discover/detail, §4.4 save/remind, FR-091 share/invite links, §4.6 push + inbox | iOS; web push; friends graph (MVP-2 under D-21) |
+| **S3** | iOS (TestFlight) | Everything in S2 **plus** Sign in with Apple (required when Google is offered, guideline 4.8) and Apple token revocation on deletion | — |
+| **S4** | Public web pages | FR-050 public event/place pages, invite landing pages; no login | Logged-in web app parity (post-MVP) |
 
 ## 3. Goals and non-goals
 
@@ -22,8 +35,8 @@ Defines what Salaam must do (functional requirements, FR) and how well (non-func
 
 | ID | Requirement | Pri | Feature |
 |---|---|---|---|
-| FR-001 | Users can sign up / sign in with email one-time code, Google, and Sign in with Apple (iOS requirement when Google is offered). Phone OTP is optional and deferred (D-05). | M | F-001 |
-| FR-002 | Onboarding collects: UI language, interests (fixed taxonomy), optional "things I have" (bike, car, camera), optional approximate area. All optional except language. | M | F-002 |
+| FR-001 | Users can sign up / sign in with email one-time code and Google (S1, S2); Sign in with Apple is added at S3 (iOS requirement when Google is offered). Phone OTP deferred (D-05). Implementation approach open until S-AUTH (ADR-0010). | M | F-001 |
+| FR-002 | Onboarding collects: UI language, interests (fixed taxonomy), optional "things I have" (bike, car, camera), optional **home district chosen from a list** (no coordinates). All optional except language. | M | F-002 |
 | FR-003 | Onboarding includes age confirmation per the approved age policy (D-03, default 18+). | M | F-001 |
 | FR-004 | Explicit, versioned consent records are captured for terms, privacy policy, and each optional processing purpose (location-based recommendations, personalised notifications, social visibility). | M | F-003 |
 | FR-005 | Users have a profile: display name, username, avatar, optional short bio, interests; each field has an audience setting (only me / friends / public). | M | F-004 |
@@ -73,7 +86,7 @@ Defines what Salaam must do (functional requirements, FR) and how well (non-func
 |---|---|---|---|
 | FR-090 | Friend requests (send/accept/decline), friend list, unfriend, block. | M | F-040 |
 | FR-091 | Invite links (deep links) to the app and to a specific occurrence; works for non-users via web page. | M | F-041 |
-| FR-092 | Going / Interested on occurrences with visibility (only me / friends / public); default **friends**. | M | F-042 |
+| FR-092 | Going / Interested on occurrences with visibility (only me / friends); default **friends**. A public option is proposed to be deferred because attendance reveals future whereabouts (D-24). | M (MVP-2 under D-21) | F-042 |
 | FR-093 | "Friends going" shown on occurrences and as a home widget, respecting visibility and blocks. | M | F-042 |
 | FR-094 | Follow places and organizers. | M | F-043 |
 | FR-095 | Report a user, event or place; block a user. | M | F-044 |
@@ -126,7 +139,7 @@ See [AI_CITY_INTELLIGENCE.md](./AI_CITY_INTELLIGENCE.md).
 | FR-171 | Scheduled collection per source policy; on-demand re-check by curator. | M | F-081 |
 | FR-172 | Structured extraction with per-field evidence and confidence; nothing invented. | M | F-082 |
 | FR-173 | Entity resolution and duplicate suggestion. | M | F-083 |
-| FR-174 | Source-specific auto-approval policies with audit sampling. | M | F-084 |
+| FR-174 | Source-specific auto-approval policies with audit sampling. **The capability exists, but through MVP-1 every source stays at L0/L1 (100% human approval).** Activation of L2+ requires evidence and founder approval ([CONTENT_OPERATIONS.md](./CONTENT_OPERATIONS.md#5-progressive-automation-ladder)). | M (capability) | F-084 |
 | FR-175 | Pre-event re-verification job for occurrences with saves. | M | F-085 |
 | FR-176 | Machine translation of verified content, labelled as such. | M | F-086 |
 | FR-177 | AI city assistant over verified data (read-only tools). | N | F-090 |
@@ -148,7 +161,7 @@ See [AI_CITY_INTELLIGENCE.md](./AI_CITY_INTELLIGENCE.md).
 | NFR-003 | Availability | Beta target 99.5% monthly for public API (single-region, single-node acceptable). |
 | NFR-004 | Data quality | ≥95% critical-field correctness on weekly audit sample of published items. |
 | NFR-005 | Freshness | Occurrences with saves re-verified within 24 h before start (where the source allows). |
-| NFR-006 | Privacy | Precise location never persisted; coarse area only, request-scoped (see [SECURITY_AND_PRIVACY.md](./SECURITY_AND_PRIVACY.md#5-location-privacy)). |
+| NFR-006 | Privacy | Precise location never leaves the device; approximate area is request-scoped, never stored or logged; no location in analytics; home area = chosen district only (see [SECURITY_AND_PRIVACY.md](./SECURITY_AND_PRIVACY.md#5-location-privacy)). |
 | NFR-007 | Security | OWASP ASVS L1 baseline; object-level authorization tested on every endpoint. |
 | NFR-008 | Accessibility | WCAG 2.2 AA for web; platform accessibility APIs on mobile; reduced-motion respected. |
 | NFR-009 | Localization | No hard-coded strings; RU text expansion (+30%) tolerated in layouts. |
@@ -160,4 +173,4 @@ See [AI_CITY_INTELLIGENCE.md](./AI_CITY_INTELLIGENCE.md).
 
 ## 6. Acceptance
 
-Per-epic acceptance criteria are in [MVP_SCOPE.md](./MVP_SCOPE.md#4-acceptance-criteria-by-epic).
+Acceptance criteria by platform stage are in [MVP_SCOPE.md](./MVP_SCOPE.md#4-acceptance-criteria-by-platform-stage).

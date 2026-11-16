@@ -1,6 +1,6 @@
 # AI City Intelligence
 
-Status: Draft 0.1 · 2026-11-14 · Related: [DATA_SOURCES_REGISTER.md](./DATA_SOURCES_REGISTER.md), [CONTENT_OPERATIONS.md](./CONTENT_OPERATIONS.md), [NOTIFICATION_ARCHITECTURE.md](./NOTIFICATION_ARCHITECTURE.md), [ADR-0014](./adr/ADR-0014-ai-model-gateway.md), [ADR-0015](./adr/ADR-0015-source-connector-architecture.md)
+Status: Draft 0.2 · 2026-11-16 (Phase 1.1 corrections) · Related: [DATA_SOURCES_REGISTER.md](./DATA_SOURCES_REGISTER.md), [CONTENT_OPERATIONS.md](./CONTENT_OPERATIONS.md), [NOTIFICATION_ARCHITECTURE.md](./NOTIFICATION_ARCHITECTURE.md), [ADR-0014](./adr/ADR-0014-ai-model-gateway.md), [ADR-0015](./adr/ADR-0015-source-connector-architecture.md)
 
 ## 1. Objectives
 
@@ -126,7 +126,7 @@ Each source (DS record) declares: connector type, credentials reference (encrypt
 | `title` | text + language | |
 | `description` | text + language | Summarised only if source text >1,500 chars; summary labelled |
 | `category` | enum (fixed taxonomy) | |
-| `occurrences[]` | start date, start time, end, `time_unknown` flag | Resolved relative to source `published_at` and Asia/Baku timezone deterministically after extraction |
+| `occurrences[]` | start date, start time, end, `time_unknown` flag | Explicit dates are taken as written. Relative expressions ("this Friday", "tomorrow") are resolved deterministically against `published_at` in Asia/Baku, but marked **`derived=true`** and always sent to human review. Derived dates are never auto-approved at any level |
 | `place_name`, `address_text` | text | Resolution done in Matching |
 | `organizer_name` | text | |
 | `price` | min, max, currency, `is_free` | Only if explicitly stated |
@@ -146,7 +146,8 @@ Every extracted field carries: `value`, `evidence_span` (exact quote or offset f
 
 ## 8. Verification and publication
 
-- Policy engine evaluates per-source rules ([CONTENT_OPERATIONS.md](./CONTENT_OPERATIONS.md#5-progressive-automation-ladder)).
+- Policy engine evaluates per-source rules ([CONTENT_OPERATIONS.md](./CONTENT_OPERATIONS.md#5-progressive-automation-ladder)). **[CONFIRMED 2026-11-16] Through MVP-1 every source is L0/L1: the pipeline only produces drafts, and every item is human-approved before publication (D-25).** L2+ requires statistical evidence and founder approval.
+- The pipeline can never set or change lifecycle (cancelled/postponed) or availability (sold out); it only raises `lifecycle_signal` tasks.
 - Publication writes `field_provenance` rows for each critical field and sets `trust_tier`, `verification_status`, `last_verified_at`.
 - Users never see `pending_review` items. Field-level unverified values are displayed with an "unconfirmed" marker or hidden (price, time).
 - Status model: [ADR-0019](./adr/ADR-0019-status-model-two-axes.md).

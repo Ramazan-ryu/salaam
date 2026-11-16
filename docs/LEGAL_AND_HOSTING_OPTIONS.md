@@ -1,6 +1,6 @@
 # Legal Questions and Hosting Options
 
-Status: Draft 0.1 · 2026-11-14 · Related: [SECURITY_AND_PRIVACY.md](./SECURITY_AND_PRIVACY.md), [PRODUCT_DECISIONS.md](./PRODUCT_DECISIONS.md) (D-02, D-03, D-20), [ADR-0017](./adr/ADR-0017-hosting-portable-deferred.md)
+Status: Draft 0.2 · 2026-11-16 (Phase 1.1 corrections) · Related: [SECURITY_AND_PRIVACY.md](./SECURITY_AND_PRIVACY.md), [PRODUCT_DECISIONS.md](./PRODUCT_DECISIONS.md) (D-02, D-03, D-20), [ADR-0017](./adr/ADR-0017-hosting-portable-deferred.md)
 
 > **This is not legal advice.** It summarises publicly reported information so that the founder can brief an Azerbaijani legal professional. Nothing here is a final legal conclusion. [CONFIRMED] Hosting provider and location are **not** finalized.
 
@@ -53,7 +53,9 @@ Status: Draft 0.1 · 2026-11-14 · Related: [SECURITY_AND_PRIVACY.md](./SECURITY
 | QL-10 | Are terms of service and privacy policy required in Azerbaijani? Consumer-protection rules for a free app? | Legal docs | MVP-1 |
 | QL-11 | Data breach notification obligations and deadlines? | Incident response | Security §9 |
 | QL-12 | Sponsored content / advertising law labelling requirements (for later monetization) | D-12 | Later |
-| QL-13 | Is a local legal entity needed to operate the service, sign partner agreements, or publish store apps under a company name? | D-20 | Before public beta |
+| QL-13 | Is a local legal entity needed to operate the service, sign partner agreements, or publish store apps under a company name? | D-20 | Before Android closed testing (P-6) |
+| QL-14 | What legal basis and consent are needed to log in-app interactions (views, saves, dismissals) for personalisation and product analytics, without location? Is an aggregated-only approach sufficient? | Analytics design | Before G6 |
+| QL-15 | What consent and storage rules apply to P-0 research: interview notes, optional audio recordings, organizer contact details, a public Telegram pilot channel restating public event facts with links? | P-0 research | P-0 week 1–2 (informal guidance acceptable) |
 
 ## 4. Age policy
 

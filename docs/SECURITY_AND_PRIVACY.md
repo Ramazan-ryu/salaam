@@ -1,6 +1,6 @@
 # Security and Privacy
 
-Status: Draft 0.1 · 2026-11-14 · Related: [LEGAL_AND_HOSTING_OPTIONS.md](./LEGAL_AND_HOSTING_OPTIONS.md), [DATABASE_DESIGN.md](./DATABASE_DESIGN.md), [AI_CITY_INTELLIGENCE.md](./AI_CITY_INTELLIGENCE.md#10-ai-safety-and-security), [ADR-0010](./adr/ADR-0010-authentication-in-house-module.md)
+Status: Draft 0.2 · 2026-11-16 (auth options reopened; location and analytics minimised) · Related: [LEGAL_AND_HOSTING_OPTIONS.md](./LEGAL_AND_HOSTING_OPTIONS.md), [DATABASE_DESIGN.md](./DATABASE_DESIGN.md), [AI_CITY_INTELLIGENCE.md](./AI_CITY_INTELLIGENCE.md#10-ai-safety-and-security), [ADR-0010](./adr/ADR-0010-authentication-approach.md)
 
 > Not legal advice. Legal obligations are listed as questions for counsel in [LEGAL_AND_HOSTING_OPTIONS.md](./LEGAL_AND_HOSTING_OPTIONS.md#3-questions-for-azerbaijani-legal-counsel).
 
@@ -41,7 +41,21 @@ Status: Draft 0.1 · 2026-11-14 · Related: [LEGAL_AND_HOSTING_OPTIONS.md](./LEG
 | Passwords | Medium | Free | Highest security burden | **Rejected** |
 | Passkeys | Low | Free | Good future addition | Next |
 
-**Implementation approach:** in-house auth module in NestJS using a maintained library for OIDC and token handling ([ADR-0010](./adr/ADR-0010-authentication-in-house-module.md)), because hosting jurisdiction is undecided and managed auth services do not offer Azerbaijani data residency [ASSUMPTION]. Re-evaluate managed auth (e.g. Supabase Auth: free plan includes 50,000 MAU; Pro $25/month — checked 2026-11-14) if hosting abroad is approved.
+### 3.1 Implementation approaches (decision OPEN — blocked by spike S-AUTH)
+
+Rule in every option: **no custom cryptography or custom authentication protocols.** Token signing, OIDC validation, OTP generation and session handling come from vetted, maintained libraries or services.
+
+| Criterion | **A. Managed authentication** (e.g. Supabase Auth, Clerk, Auth0, Firebase Auth) | **B. Library-based in NestJS** (vetted OIDC/session/OTP libraries; candidate list fixed in S-AUTH) | **C. Self-hosted identity server** (e.g. Keycloak, Ory Kratos/Hydra, Zitadel) |
+|---|---|---|---|
+| Security | Strong defaults; provider handles patching; breach at provider is outside your control | Depends on correct composition of libraries; more ways to misconfigure | Mature, feature-rich; security depends on keeping the server patched and correctly configured |
+| Maintenance | Lowest | Medium (library upgrades, own flows, tests) | Highest (another service to run, upgrade, back up, monitor) |
+| Portability | Lock-in to provider APIs; user export/migration path must be checked (password-less helps) | High (identity data in own Postgres) | High (open source; own database) |
+| Cost | Free tiers then per-MAU (Supabase: 50,000 MAU free; Pro from $25/month with 100,000 MAU — official, 2026-11-16; others **not verified here**) | $0 software; email delivery cost | $0 software; extra compute and ops time |
+| Data residency | Provider regions; Azerbaijan region **not found** for the examples [UNVERIFIED — check in S-AUTH] | Wherever Salaam is hosted | Wherever Salaam is hosted |
+| Solo-founder suitability | Best for speed, if residency/legal answers allow | Good if the founder can review auth code; needs strong tests | Poor for MVP (operational load) |
+| Apple/Google sign-in, account deletion, Apple token revocation | Usually built-in or documented | Must be implemented with libraries | Usually supported; configuration work |
+
+**Spike S-AUTH (P-1, 2–3 dd)** evaluates one candidate from A and one or two from B (C only if counsel requires in-country identity and B fails). It implements, for each: email code, Google, Apple (incl. token revocation on deletion), refresh-token rotation with reuse detection, account deletion, admin TOTP, Expo integration, and user export. Decision criteria: security review checklist, hours to implement, ongoing maintenance estimate, data-residency fit with D-02, cost at 5,000 MAU, and migration path. Result recorded by updating [ADR-0010](./adr/ADR-0010-authentication-approach.md).
 
 App Store also requires that apps supporting account creation offer in-app account deletion (guideline 5.1.1(v)).
 
@@ -54,16 +68,40 @@ App Store also requires that apps supporting account creation offer in-app accou
 
 ## 5. Location privacy
 
+### 5.1 Two different things
+
+| | **Home area (voluntary, stored)** | **Current approximate location (temporary, not stored)** |
+|---|---|---|
+| What | A district the user **chooses from a list** (e.g. "Nəsimi"), optional | The device's position, coarsened on the device to a ~1 km cell, used for one "near me" request |
+| Purpose | Default area for suggestions when location is off | "Now near me" results |
+| Consent | Part of profile; explained at selection | OS location permission **and** consent `location_reco` |
+| Storage | `profiles.home_district_id` (user can clear it) | **Never stored**: not in DB, not in logs, not in analytics, not in error reports |
+| Visibility | Only the user | Nobody |
+
+### 5.2 Coarse location is not anonymous
+
+A ~1 km cell or a district combined with a user ID, timestamps or repetition can reveal home, work, routines and attendance patterns. In low-density areas a cell can point to a single building cluster. The documents therefore treat **any** location tied to a user, including coarse cells, districts and future "going" attendance at a venue, as **personal data** (privacy class P2). The analytics design must not create a location history.
+
+### 5.3 Controls
+
 | Principle | Implementation |
 |---|---|
-| Private by default | No location permission requested during onboarding; user may choose an approximate area manually |
-| Coarse only on server | Clients send geohash precision ≤6 (~1.2 × 0.6 km cell) for "near" queries; server rejects precise coordinates on discovery endpoints |
-| No storage of live location | Not stored in DB; not written to logs (log scrubbing of query params `near`) |
-| Home area | Optional, stored at geohash precision 5 (~4.9 × 4.9 km) |
-| Separate permissions | Location-based recommendations (consent `location_reco`) and social location sharing (Later, separate consent) are separate |
-| Instant disable | One toggle in settings; takes effect immediately client- and server-side |
-| Visibility indicators | When any location-based feature is active, a visible indicator appears on Home |
-| Device-only precision | Precise location (if granted) used only on-device to center the map and compute a geohash |
+| Private by default | No location permission requested during onboarding; optional district choice instead |
+| Coarse on the device | Precise coordinates never leave the device; the app sends a geohash-6 cell (~1.2 × 0.6 km) |
+| Not in URLs or logs | Approximate area is sent in a request **header** (`X-Approx-Area`), not a query parameter, so access logs, CDN logs and error trackers don't capture it; header excluded from logging and error breadcrumbs by configuration and tested |
+| No location history | `interaction_events` contain **no location fields** in MVP ([DATABASE_DESIGN.md](./DATABASE_DESIGN.md#57-interaction--recommendation-data)) |
+| Home area | District ID only (no geohash, no coordinates) |
+| Attendance reveals future whereabouts | "Going" at a venue/time is location-like data; MVP offers only `only_me` and `friends` visibility (public option proposed to be deferred, D-24) |
+| Separate permissions | Location-based recommendations (`location_reco`) and any future social location sharing (separate consent, Later) |
+| Instant disable | One toggle; takes effect immediately on device and server |
+| Visibility indicator | When current-location features are active, an indicator appears on Home |
+| No IP-derived location | IP addresses are not geolocated |
+
+### 5.4 Minimum location data for MVP [RECOMMENDED, D-28]
+
+1. Optional home district (stored, user-deletable).
+2. Optional per-request approximate cell (never stored).
+3. Nothing else: no location in analytics, no background location, no location sharing.
 
 ## 6. Privacy by design
 
@@ -74,6 +112,9 @@ App Store also requires that apps supporting account creation offer in-app accou
 - **Pipeline content:** collected public content may include personal data of third parties (faces, names in posts); minimise: store text needed for extraction, purge raw items per retention, don't index people.
 - **LLM calls:** extraction/translation prompts contain only public/organizer content; user-entered text (assistant, later) is personal data → cross-border question QL-04.
 - **Minors:** default 18+ (D-03) pending QL-01.
+- **IP addresses:** hashing an IPv4 address does not anonymise it (the whole address space can be hashed and matched). Consent records store **no IP** unless counsel requires it as evidence (QL-02); then encrypted with a defined retention. Short-lived security logs (rate limiting, abuse) keep IPs ≤30 days. Staff audit logs keep the actor's IP ≤90 days.
+- **Analytics (MVP):** no third-party analytics SDK. Product metrics are computed from the database as aggregates. Raw `interaction_events` (view, save, dismiss, open_link, share) have **no location**, are kept ≤90 days, then aggregated per user × category and the raw rows deleted. Legal basis and consent for interaction logging and personalisation: QL-14.
+- **Research data (P-0):** interview notes anonymised, contacts stored separately and deleted after P-0, recordings only with consent and deleted ≤30 days (QL-15).
 
 ## 7. AI-specific security
 

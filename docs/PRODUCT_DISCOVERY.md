@@ -1,6 +1,6 @@
 # Product Discovery
 
-Status: Draft 0.1 · 2026-11-14 · Related: [PROJECT_VISION.md](./PROJECT_VISION.md), [MARKET_AND_COMPETITOR_ANALYSIS.md](./MARKET_AND_COMPETITOR_ANALYSIS.md), [MVP_SCOPE.md](./MVP_SCOPE.md), [PRODUCT_DECISIONS.md](./PRODUCT_DECISIONS.md)
+Status: Draft 0.2 · 2026-11-16 (Phase 1.1 corrections) · Related: [PROJECT_VISION.md](./PROJECT_VISION.md), [MARKET_AND_COMPETITOR_ANALYSIS.md](./MARKET_AND_COMPETITOR_ANALYSIS.md), [MVP_SCOPE.md](./MVP_SCOPE.md), [PRODUCT_DECISIONS.md](./PRODUCT_DECISIONS.md)
 
 ## 1. Core user problems
 
@@ -37,6 +37,8 @@ Reasons:
 3. Social behaviour (going with friends) exercises the friend/invite features the architecture must support.
 4. Adults only avoids the minors' rules adopted in August 2026, which are still under legal review (QL-01).
 5. Tourists benefit from public web event pages without requiring app installation (no retention dependency).
+
+Validation includes 2–3 **comparison interviews** from another segment (e.g. expats or parents), so outcome 4 of the G0 framework ("change the initial audience") can be evidence-based.
 
 Consequence: content sourcing prioritises nightlife-adjacent culture, concerts, exhibitions, cinema, workshops, cafés, free events; family/kids content is deferred.
 
@@ -77,27 +79,26 @@ Consequence: content sourcing prioritises nightlife-adjacent culture, concerts, 
 
 | ID | Assumption | Risk if false | Validation (solo-founder friendly) | Pass criterion |
 |---|---|---|---|---|
-| A1 | ≥100 publishable events/week exist in Baku for the target segment | No product | Manual curation sprint, 4 weeks, spreadsheet + public sources | ≥100/week for 3 of 4 weeks |
-| A2 | Most announcements come from ≤300 identifiable sources | Unscalable sourcing | Record source of each curated item | 80% of items from ≤300 sources |
-| A3 | Target users feel the pain and would use a dedicated product | No adoption | 12–15 interviews + Telegram/Instagram channel pilot | ≥40% of pilot members engage weekly by week 4 |
-| A4 | Avatar-first home increases engagement without hurting task speed | Wasted art budget | Clickable prototype tests (Concept A vs C), 8–10 users | Task "find something tonight" ≤30 s in both; ≥60% prefer A or rate it more "mine" |
-| A5 | Some venues will connect accounts or submit events free | Supply ceiling | Pitch 20 venues | ≥5 agree to try |
+| A1 | Enough publishable events exist in 3–4 pilot categories | No product | 6-week curation in the workbook | VM-01 ≥ 30 min / 50 target verified events/week (0.1 target of ≥100 recalibrated for 10–15 h/week) |
+| A2 | Most items come from a small, identifiable set of sources | Unscalable sourcing | Record `source_id` for each item | VM-02: top 30 sources ≥ 60% (target 75%) |
+| A3 | Target users **repeatedly** use curated city information | No adoption | Interviews (past behaviour) + Telegram pilot | VM-11 ≥ 25%, VM-12 ≥ −20%, VM-13 ≥ 10%, VM-21 ≥ 40% |
+| A4 | Avatar-centred home helps or at least doesn't hurt task speed | Wasted art budget | Static prototypes A vs C in 6–10 sessions | VM-41 ≥ 80%; VM-42 ≤ 1.3×; VM-44 ≤ 50% |
+| A5 | Some organizers will act (submit), not just express interest | Supply ceiling | 12–15 personalised contacts + form | VM-31 ≥ 2 organizers submitted |
 | A6 | Partners will share feeds | Lower data quality | Outreach (non-blocking) | Any signed pilot is upside |
-| A7 | Users grant and keep notification permission | Weak re-engagement | Beta metrics | Opt-in ≥50%, monthly opt-out <10% |
-| A8 | Curation workload is sustainable for one person | Founder burnout | Time tracking during A1 sprint | ≤6 h/week for 100 events with tooling (target after P-5) |
+| A7 | Users grant and keep notification permission | Weak re-engagement | Beta metrics | Opt-in ≥50%, monthly opt-out <10% (MVP-1) |
+| A8 | Curation fits the founder's budget | Founder burnout | Time log | VM-04 ≤ 6 min/item in P-0; ≤5 h/week content ops in beta (D-10) |
 
-## 7. Validation questions for interviews (excerpt)
+All thresholds and measurement methods: [VALIDATION_METRICS.md](./VALIDATION_METRICS.md). Plan: [P0_VALIDATION_PLAN.md](./P0_VALIDATION_PLAN.md). Interest (sign-ups, "nice idea") is never a pass criterion; behaviour is.
 
-1. Tell me about the last time you went out for something other than work/study. How did you find it?
-2. Where do you look for events? How many accounts/channels do you check?
-3. When did information last turn out wrong? What happened?
-4. How do you decide with friends where to go?
-5. Which language do you prefer for this information?
-6. (Show Concept A and C prototypes) Which feels more like yours? Find something for tonight.
-7. Would you allow notifications? What would make you turn them off?
+## 7. Interview guides
 
-## 8. Discovery outputs required before P-2 (foundation)
+Full user and organizer guides, screener, notes and synthesis templates: [USER_INTERVIEW_GUIDE.md](./USER_INTERVIEW_GUIDE.md). Questions focus on past behaviour; the concept is introduced only after the behaviour sections; the avatar test uses the A/C prototypes.
+
+## 8. Discovery outputs required at G0
 
 - Interview synthesis (anonymised) appended to this document.
-- Curation sprint results (counts by category/source) → updates [DATA_SOURCES_REGISTER.md](./DATA_SOURCES_REGISTER.md).
-- Prototype test results → updates [UX_UI_SPECIFICATION.md](./UX_UI_SPECIFICATION.md) and D-06.
+- Workbook results (supply, sources, curation time, change rate) → [DATA_SOURCES_REGISTER.md](./DATA_SOURCES_REGISTER.md), [CONTENT_OPERATIONS.md](./CONTENT_OPERATIONS.md).
+- Prototype test results → [UX_UI_SPECIFICATION.md](./UX_UI_SPECIFICATION.md) and D-06.
+- G0 report ([VALIDATION_METRICS.md](./VALIDATION_METRICS.md#5-g0-report-template)).
+
+**No research has been conducted yet.** Personas and problems above remain assumptions until then.

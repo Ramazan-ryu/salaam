@@ -1,6 +1,6 @@
 # Architecture Review
 
-Status: Draft 0.1 · 2026-11-14 · Related: [SYSTEM_ARCHITECTURE.md](./SYSTEM_ARCHITECTURE.md), [adr/README.md](./adr/README.md), [COST_AND_RESOURCE_ESTIMATE.md](./COST_AND_RESOURCE_ESTIMATE.md)
+Status: Draft 0.2 · 2026-11-16 (Phase 1.1 corrections) · Related: [SYSTEM_ARCHITECTURE.md](./SYSTEM_ARCHITECTURE.md), [adr/README.md](./adr/README.md), [COST_AND_RESOURCE_ESTIMATE.md](./COST_AND_RESOURCE_ESTIMATE.md)
 
 Purpose: challenge every major technology choice for a **solo developer with a small budget** using Claude Code. For each: why needed, alternatives, initial cost, operational complexity, maintenance burden, when to introduce, what can be postponed. Costs reference [COST_AND_RESOURCE_ESTIMATE.md](./COST_AND_RESOURCE_ESTIMATE.md); "$0" means open-source software (hosting cost counted separately).
 
@@ -9,7 +9,7 @@ Purpose: challenge every major technology choice for a **solo developer with a s
 | Phase 0 | Phase 1 revision | Reason |
 |---|---|---|
 | Separate Next.js admin app | **One Next.js app** with route groups (`/admin`, `/organizer`) | One deployment for a solo founder; Next.js code-splits per route, so admin code isn't shipped to public pages |
-| Managed auth vs in-house undecided | **In-house auth module** (library-based) | Hosting undecided; portability; zero vendor cost |
+| Managed auth vs in-house undecided | 0.1: in-house module. **0.2: reopened — decision blocked by spike S-AUTH** (managed vs library-based vs self-hosted) | Phase 1.1 review: managed auth may be safer and cheaper in founder time if D-02 allows; no custom crypto in any option |
 | Map tiles via provider | **Self-hosted PMTiles first** (spike), provider as fallback | MapTiler free plan is non-commercial only; avoids monthly fee |
 | pgvector in MVP | **Deferred** | Not needed until dedup precision requires it |
 | Expo Push implied | Confirmed with provider abstraction | Free relay; can switch to direct APNs/FCM |
@@ -93,16 +93,18 @@ Purpose: challenge every major technology choice for a **solo developer with a s
 | Postpone | Redis entirely until caching/rate-limit needs exceed Postgres/in-memory |
 | Risk | Throughput limits at large scale — irrelevant for MVP volumes; abstraction allows swap |
 
-### 2.8 Authentication (in-house module)
+### 2.8 Authentication (decision open — spike S-AUTH)
 | Aspect | Assessment |
 |---|---|
-| Why | Portability across jurisdictions; no per-MAU fees |
-| Alternatives | Supabase Auth (free 50k MAU; ties identity to Supabase hosting regions); Clerk/Auth0 (costs, foreign hosting); Keycloak/Ory (powerful, heavy to operate) |
-| Cost | $0 + email delivery |
-| Ops | Medium — security-sensitive code; use well-maintained library; no passwords |
-| Introduce | P-2 |
+| Why | Identity, sessions, sign-in providers, deletion; security-critical |
+| Options | **Managed** (e.g. Supabase Auth: 50,000 MAU free; Pro from $25/month with 100,000 MAU — official 2026-11-16; Clerk/Auth0/Firebase prices not verified here) · **Library-based NestJS** (vetted libraries, own database) · **Self-hosted server** (Keycloak, Ory, Zitadel) |
+| Security | Managed: strongest defaults, least code. Library: more ways to misconfigure, so needs strong tests. Self-hosted: mature but patching burden |
+| Portability / residency | Managed: provider regions (no Azerbaijan region found for the examples [UNVERIFIED]). Library and self-hosted: wherever Salaam runs |
+| Cost | Managed: free tier then per-MAU. Library: $0 + email. Self-hosted: $0 + compute + ops time |
+| Solo suitability | Managed > Library >> Self-hosted |
+| Rule | **No custom cryptography or authentication protocols** in any option |
+| Decision | Blocked by S-AUTH (P-1, 2–3 dd); criteria in [SECURITY_AND_PRIVACY.md](./SECURITY_AND_PRIVACY.md#31-implementation-approaches-decision-open--blocked-by-spike-s-auth) and [ADR-0010](./adr/ADR-0010-authentication-approach.md) |
 | Postpone | Phone OTP, passkeys, Telegram login |
-| Risk | Implementation bugs → follow library defaults, test suite for auth flows, external review before MVP-2 |
 
 ### 2.9 Object storage (S3-compatible)
 | Aspect | Assessment |
@@ -167,7 +169,9 @@ Purpose: challenge every major technology choice for a **solo developer with a s
 | Hosting provider/region | Deferred (D-02) | Before MVP-1 |
 | Email delivery provider | Open | P-2 |
 | Error tracking (hosted free tier vs self-hosted) | Open | P-2 |
-| Exact auth library | Open — spike in P-2 | P-2 |
+| Auth approach (managed / library / self-hosted) and exact provider or library | Open — blocked by spike S-AUTH | P-1 (G1) |
+| CI provider (GitHub Actions assumed, repo is on GitHub) | Open — ADR in P-2 | P-2 |
+| Reverse proxy/TLS and backup tooling | Open — ADR in P-2 | P-2 |
 | ORM / query builder | Open — prefer a type-safe query builder or lightweight ORM with explicit SQL for geo; decide in P-2 ADR | P-2 |
 | Static avatar rendering location | Open (Q-AV2) | P-1 spike |
 | Analytics approach (self-hosted product analytics vs DB-derived) | Open | P-6 |

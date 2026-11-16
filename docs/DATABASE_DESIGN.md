@@ -1,6 +1,6 @@
 # Database Design
 
-Status: Draft 0.1 · 2026-11-14 · Related: [SYSTEM_ARCHITECTURE.md](./SYSTEM_ARCHITECTURE.md), [ADR-0006](./adr/ADR-0006-postgresql-postgis.md), [ADR-0019](./adr/ADR-0019-status-model-two-axes.md), [SECURITY_AND_PRIVACY.md](./SECURITY_AND_PRIVACY.md)
+Status: Draft 0.2 · 2026-11-16 (Phase 1.1 corrections) · Related: [SYSTEM_ARCHITECTURE.md](./SYSTEM_ARCHITECTURE.md), [ADR-0006](./adr/ADR-0006-postgresql-postgis.md), [ADR-0019](./adr/ADR-0019-status-model-two-axes.md), [SECURITY_AND_PRIVACY.md](./SECURITY_AND_PRIVACY.md)
 
 > Specification level. No migrations are created. Types are PostgreSQL types; `uuid` primary keys (time-ordered UUIDv7 recommended) unless stated. All tables have `created_at`, `updated_at` (timestamptz) unless noted.
 
@@ -50,8 +50,8 @@ erDiagram
 | `users` | id, status (`active/suspended/deleted`), primary_locale, age_confirmed_at, age_policy_version | — | P1 | Until deletion (+30 d purge) |
 | `auth_accounts` | id, user_id, provider (`email/google/apple/phone`), provider_subject, email (nullable) | unique(provider, provider_subject) | P1/S | With user |
 | `sessions` | id, user_id, refresh_token_hash, device_id, expires_at, revoked_at | index(user_id) | S | 90 d after expiry |
-| `consents` | id, user_id, purpose (`terms`, `privacy`, `location_reco`, `personalized_notifications`, `social_visibility`, …), document_version, granted (bool), at, source (`app/web`), ip_hash | index(user_id, purpose) | P2 | Retain as evidence per counsel (QL-06) |
-| `profiles` | user_id (PK), display_name, username (unique, citext), bio, interests (text[] of taxonomy ids), things_i_have (text[]), home_area_geohash5 (nullable) | unique(username) | P1/P2 | With user |
+| `consents` | id, user_id, purpose (`terms`, `privacy`, `location_reco`, `personalized_notifications`, `social_visibility`, `interaction_personalization`, …), document_version, granted (bool), at, source (`app/web`). **No IP stored** unless counsel requires it (QL-02); then `ip_encrypted` with defined retention | index(user_id, purpose) | P2 | Retain as evidence per counsel (QL-06) |
+| `profiles` | user_id (PK), display_name, username (unique, citext), bio, interests (text[] of taxonomy ids), things_i_have (text[]), home_district_id (nullable FK → `districts`; voluntarily chosen, user can clear) | unique(username) | P1/P2 | With user |
 | `privacy_settings` | user_id (PK), field_audiences (jsonb: field → `only_me/friends/public`), default_attendance_visibility, friend_request_policy | — | P2 | With user |
 
 ## 4. Avatar
@@ -69,6 +69,7 @@ erDiagram
 | Table | Key fields | Indexes |
 |---|---|---|
 | `cities` | id, slug, name (jsonb), timezone, bbox (geography polygon), active | unique(slug) |
+| `districts` | id, city_id, slug, name (jsonb), area (geography polygon, public boundary data) | unique(city_id, slug); GiST(area) |
 | `places` | id, city_id, kind (`venue/cinema/cafe/restaurant/park/museum/bike_station/landmark/other`), name (jsonb), address (jsonb), location (geography), geohash7, opening_hours (jsonb, nullable), website, external_refs (jsonb: osm id, etc.), trust_tier, verification_status, last_verified_at | GiST(location); GIN trigram on normalized names; index(city_id, kind) |
 | `place_aliases` | place_id, alias, locale, normalized | GIN trigram(normalized) |
 | `organizers` | id, name (jsonb), kind, website, instagram_handle, verified (bool), claimed_by_user_id | trigram on name |
@@ -122,7 +123,7 @@ erDiagram
 | `friendships` | user_low_id, user_high_id, status (`pending/accepted`), requested_by, created_at, accepted_at | PK(user_low_id, user_high_id); check(user_low_id < user_high_id) | P2 |
 | `blocks` | blocker_id, blocked_id | PK(blocker_id, blocked_id) | P2 |
 | `follows` | user_id, target_type (`place/organizer/user`), target_id | PK(user_id, target_type, target_id) | P1 |
-| `attendances` | user_id, occurrence_id, intent (`going/interested`), visibility (`only_me/friends/public`) | PK(user_id, occurrence_id); index(occurrence_id, visibility) | P2 |
+| `attendances` | user_id, occurrence_id, intent (`going/interested`), visibility (`only_me/friends`; `public` reserved, disabled in MVP pending D-24) | PK(user_id, occurrence_id); index(occurrence_id, visibility) | P2 (reveals future whereabouts) |
 | `invites` | token (random, hashed at rest), inviter_id, target_type, target_id, expires_at, uses, max_uses | unique(token_hash) | P1 |
 | `reports` | id, reporter_id, target_type, target_id, reason, details, status | — | P1 |
 | `moderation_actions` | id, report_id, actor_id, action, note | — | P1 |
@@ -131,7 +132,10 @@ erDiagram
 
 | Table | Key fields | Retention |
 |---|---|---|
-| `interaction_events` | user_id, type (`view/save/dismiss/open_link/share`), target_type, target_id, at, context (jsonb: lens, coarse geohash5) | 12 months raw → aggregated counts per user & category, raw deleted |
+| `interaction_events` | user_id, type (`view/save/dismiss/open_link/share`), target_type, target_id, at, context (jsonb: lens only — **no location fields**) | 90 days raw → aggregated counts per user × category (`interaction_aggregates`), raw deleted |
+| `interaction_aggregates` | user_id, category_id, period (month), counts by type | With user; deleted on account deletion |
+
+Corrected in 0.2: the 0.1 design stored a coarse geohash per interaction for 12 months, which would have created a location history tied to user IDs ([SECURITY_AND_PRIVACY.md](./SECURITY_AND_PRIVACY.md#52-coarse-location-is-not-anonymous)).
 
 ### 5.8 Notifications
 
@@ -146,7 +150,7 @@ erDiagram
 
 | Table | Key fields | Retention |
 |---|---|---|
-| `audit_logs` | id, actor_id, actor_role, action, entity_type, entity_id, before (jsonb), after (jsonb), at, ip_hash | 3 years [OPEN — counsel QL-06] |
+| `audit_logs` | id, actor_id, actor_role, action, entity_type, entity_id, before (jsonb), after (jsonb), at, actor_ip (staff/organizer actions only; nulled after 90 days) | 3 years [OPEN — counsel QL-06] |
 | `feature_flags` | key, enabled, rules (jsonb: percentage, roles, platforms) | — |
 
 ## 6. Social extension points
@@ -171,8 +175,11 @@ Designed so groups/communities can be added without reworking MVP tables:
 | Data | Retention | Mechanism |
 |---|---|---|
 | Raw source items | Per source, default 90 d | Daily purge job |
-| Precise location | Never stored | Request-scoped only |
-| Interaction events | 12 months raw | Monthly aggregation job |
+| Precise location | Never leaves the device | — |
+| Approximate current location (geohash-6 cell) | Never stored or logged | Request header, excluded from logs |
+| Home district | Until the user clears it or deletes the account | User control |
+| Interaction events | 90 days raw, then aggregated | Daily aggregation/purge job |
+| Security logs with IP | ≤30 days | Log rotation |
 | Notifications | 6 months | Purge job |
 | Audit logs | 3 years (confirm) | Partitioned by month |
 | Deleted accounts | Purged within 30 d | Deletion job; backups expire within 35 d |
@@ -181,5 +188,6 @@ Designed so groups/communities can be added without reworking MVP tables:
 ## 9. Data quality constraints
 
 - Check constraints for lifecycle/verification enums (as Postgres enums or check lists).
-- Trigger or application rule: cannot set `verification_status='auto_approved'` unless source automation level ≥ L2.
+- Trigger or application rule: cannot set `verification_status='auto_approved'` unless the source's automation level is ≥ L2 **and** that level was activated by a founder-approved, audit-logged change. Through MVP-1 every source is L0/L1, so no item can be auto-approved ([CONTENT_OPERATIONS.md](./CONTENT_OPERATIONS.md#5-progressive-automation-ladder)).
+- Lifecycle (`cancelled`, `postponed`) and `availability` changes can only be written by a human decision record, never by the pipeline.
 - Price fields require a provenance row with evidence.

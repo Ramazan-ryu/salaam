@@ -13,7 +13,7 @@ Status tracking: `Proposed` → `Accepted` / `Rejected` → `Superseded by ADR-n
 | [ADR-0007](./ADR-0007-search-postgres-fts-trgm.md) | Search: Postgres full-text + pg_trgm | Proposed | Q-09 | — |
 | [ADR-0008](./ADR-0008-pgvector-deferred.md) | pgvector deferred | Proposed | P-5 metrics | — |
 | [ADR-0009](./ADR-0009-background-jobs-pg-boss.md) | Background jobs: pg-boss (no Redis initially) | Proposed | — | — |
-| [ADR-0010](./ADR-0010-authentication-in-house-module.md) | Authentication: in-house module, library-based | Proposed | Spike S-AUTH | D-05 |
+| [ADR-0010](./ADR-0010-authentication-approach.md) | Authentication approach (managed vs library vs self-hosted) | Proposed — **open, blocked by S-AUTH** | Spike S-AUTH | D-05 |
 | [ADR-0011](./ADR-0011-object-storage-s3-compatible.md) | Object storage: S3-compatible API | Proposed | D-02 | D-02 |
 | [ADR-0012](./ADR-0012-avatar-rive-and-avatar-as-data.md) | Avatar: Rive renderer, avatar-as-data | Proposed | Spike S-AV1 | D-08 |
 | [ADR-0013](./ADR-0013-maps-maplibre-osm.md) | Maps: MapLibre + OSM data, self-hosted tiles first | Proposed | Spike S-MAP | D-14 |
