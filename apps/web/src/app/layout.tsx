@@ -1,32 +1,18 @@
-import type { Metadata } from 'next';
-import Link from 'next/link';
-import { IdentitySwitcher } from './identity';
-import './globals.css';
+import type { Metadata, Viewport } from 'next';
+import { getLocale } from '@/lib/locale-server';
 
 export const metadata: Metadata = {
-  title: 'Salaam — Staff',
-  robots: { index: false, follow: false },
+  title: { default: 'Salaam — Bakı', template: '%s · Salaam' },
+  description: 'Bakıda bu gün nə var: yoxlanılmış tədbirlər, yaxınlıqdakı yerlər.',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export const viewport: Viewport = { width: 'device-width', initialScale: 1, themeColor: '#FBF7F2' };
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = await getLocale();
   return (
-    <html lang="en">
-      <body>
-        <div className="shell">
-          <header className="top">
-            <div className="brand">
-              Salaam<small>staff · Baku pilot</small>
-            </div>
-            <nav className="nav">
-              <Link href="/review">Review queue</Link>
-              <Link href="/events">Events</Link>
-              <Link href="/organizer">Organizer submit</Link>
-            </nav>
-            <IdentitySwitcher />
-          </header>
-          {children}
-        </div>
-      </body>
+    <html lang={locale}>
+      <body style={{ margin: 0 }}>{children}</body>
     </html>
   );
 }

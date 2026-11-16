@@ -70,6 +70,7 @@ export async function seedReference(db: Db, opts: { approveOrganizerPortal: bool
         connectorType: 'manual_entry',
         defaultTrustTier: 'T1_official',
         status: 'approved',
+        isSynthetic: true,
         legalBasis: 'Internal synthetic data',
       },
     ])

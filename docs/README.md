@@ -86,8 +86,11 @@ Legal content is **not legal advice** ([LEGAL_AND_HOSTING_OPTIONS.md](./LEGAL_AN
 | 32 | [USER_INTERVIEW_GUIDE.md](./USER_INTERVIEW_GUIDE.md) | **New:** user & organizer guides, templates | 0.2 |
 | 33 | [ORGANIZER_OUTREACH.md](./ORGANIZER_OUTREACH.md) | **New:** az/ru/en messages, pilot explanation | 0.2 |
 | 34 | [CONTENT_VALIDATION_WORKBOOK.md](./CONTENT_VALIDATION_WORKBOOK.md) | **New:** content & source schemas | 0.2 |
+| 35 | [FEATURE_TRACEABILITY_MATRIX.md](./FEATURE_TRACEABILITY_MATRIX.md) | **New:** design → working-feature pipeline, per-feature status | 0.3 |
+| 36 | [DOCKER_ARCHITECTURE.md](./DOCKER_ARCHITECTURE.md) | **New:** compose profiles, images, health, backups | 0.3 |
+| 37 | [LOCAL_DEVELOPMENT.md](./LOCAL_DEVELOPMENT.md) | **New:** one-command start guide, Windows/macOS/Linux | 0.3 |
 | — | [`p0/`](./p0/) | **New:** CSV templates (items, sources, pilot metrics, interviews, outreach, time log) | 0.2 |
-| — | [adr/README.md](./adr/README.md) | ADR index (20 ADRs; ADR-0010 reopened) | Proposed |
+| — | [adr/README.md](./adr/README.md) | ADR index (21 ADRs; ADR-0010 reopened) | Proposed |
 
 Related visual: design canvas **"Salaam — First Look: Home Concepts A & C"** (https://claude.ai/artifact/U3AeDKbdom2jQL59zARQom), with first mockups of the two home layouts for P-0 testing.
 

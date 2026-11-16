@@ -13,7 +13,7 @@
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--ink); font-size: 15px; line-height: 1.45; }
+.staff { min-height: 100vh; background: var(--bg); color: var(--ink); font-size: 15px; line-height: 1.45; }
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 

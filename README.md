@@ -2,20 +2,30 @@
 
 Working name for a city companion app for Azerbaijan (pilot: Baku): verified events, places and cinema, an avatar-first experience, and light social features. The app supports Azerbaijani, Russian and English.
 
-**Current stage:** implementation stage S1 (staff/organizer web + API), started 2026-11-17 on the founder's instruction. Product validation (P-0) was skipped by choice; its kit remains in `docs/`.
+**Current stage:** first working vertical slice (M-VS1). Status at a glance: [PROJECT_STATE.md](./PROJECT_STATE.md) · [IMPLEMENTATION_STATUS.md](./IMPLEMENTATION_STATUS.md) · [FOUNDER_ACTIONS.md](./FOUNDER_ACTIONS.md).
+
+## Start it (one command)
+
+```bash
+docker compose --profile full up --build -d
+```
+
+Then open http://localhost:3000 (app) and http://localhost:3000/staff (staff portal). Full guide for non-programmers:
+[docs/LOCAL_DEVELOPMENT.md](./docs/LOCAL_DEVELOPMENT.md). Screenshots of the running app: [`design/screenshots/`](./design/screenshots/).
 
 ## What exists
 
 | Path | What |
 |---|---|
-| `apps/api` | NestJS 11 API: catalog, source register, organizer submissions, review queue, human-approved publication, public discovery (`/v1/discover`) |
-| `apps/web` | Next.js staff web: review queue, manual entry, events list, organizer submission form |
+| `apps/web` | Public app (avatar-first home, Discover with "near me", event pages, az/ru/en) and staff portal (`/staff`) |
+| `apps/api` | NestJS API: catalog, source register, organizer submissions, review queue, human-approved publication, discovery |
 | `packages/domain` | Shared enums, zod schemas, localization fallback |
-| `apps/api/test` | Integration tests against a real PostGIS database (29 tests) |
+| `compose.yaml`, `infra/` | Docker environment (profiles core/full/tools/storage), Dockerfiles, backup/restore |
+| `docs/` | Product, architecture, ADRs; how a feature goes from design to code: [FEATURE_TRACEABILITY_MATRIX.md](./docs/FEATURE_TRACEABILITY_MATRIX.md) |
 
-Rules enforced in code: nothing is public without a human decision (D-25, also a DB CHECK); automation above L1 is refused; lifecycle changes are human and audited; price is shown only when stated; approximate location is accepted only as a ≤6-char geohash header and never stored.
+Rules enforced in code: nothing is public without a human decision (D-25, also a DB CHECK); automation above L1 is refused; lifecycle changes are human and audited; price is shown only when stated; approximate location is a coarse area computed in the browser, never stored; sample data is labelled and hidden in production.
 
-## Run locally
+## Developer mode (native)
 
 Requires Node 22+, pnpm 10, and PostgreSQL 16 with PostGIS (or `docker compose up -d db`).
 

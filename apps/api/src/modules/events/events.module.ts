@@ -10,7 +10,9 @@ import {
   Patch,
   Post,
   Query,
+  Res,
 } from '@nestjs/common';
+import type { Response } from 'express';
 import {
   AVAILABILITY,
   LIFECYCLE_STATUSES,
@@ -74,10 +76,14 @@ export class PublicEventsController {
   @Get('discover')
   find(
     @Query() query: Record<string, string>,
-    @Headers('accept-language') acceptLanguage?: string,
-    @Headers('x-approx-area') approxArea?: string,
+    @Headers('accept-language') acceptLanguage: string | undefined,
+    @Headers('x-approx-area') approxArea: string | undefined,
+    @Res({ passthrough: true }) res: Response,
   ) {
     const q = discoverSchema.parse(query);
+    // Location-dependent answers must never be stored by shared caches (docs/API_SPECIFICATION.md).
+    res.setHeader('Cache-Control', approxArea ? 'private, no-store' : 'public, max-age=60');
+    res.setHeader('Vary', 'Accept-Language, X-Approx-Area');
     if (q.lens === 'date' && !q.date) throw new ProblemError(400, 'DATE_REQUIRED', 'date is required for lens=date');
     return this.discover.discover({ ...q, approxArea: approxArea || undefined, locale: parseAcceptLanguage(acceptLanguage) });
   }

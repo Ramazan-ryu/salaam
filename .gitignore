@@ -17,3 +17,6 @@ dist/
 *.tsbuildinfo
 next-env.d.ts
 coverage/
+
+# Local backups
+backups/

@@ -101,6 +101,7 @@ describe('Platform invariants', () => {
   it('approximate area filters by radius without storing location', async () => {
     // geohash "tp5my" ≈ central Baku (5 chars ≈ 2.4 km cell)
     const near = await ctx.http().get(`/v1/discover?lens=date&date=${date}&radiusKm=5`).set('X-Approx-Area', 'tp5my').expect(200);
+    expect(near.headers['cache-control']).toBe('private, no-store');
     const titles = near.body.items.map((i: { event: { title: string } }) => i.event.title);
     expect(titles).not.toContain('Far away concert');
     expect(near.body.items.length).toBeGreaterThan(0);

@@ -54,7 +54,7 @@ export default function ReviewQueue() {
                 <tr key={r.id}>
                   <td>{r.priority <= 20 ? <span className="tag warn">≤72 h</span> : <span className="tag">normal</span>}</td>
                   <td>
-                    <Link href={`/review/${r.id}`}>{r.summary}</Link>
+                    <Link href={`/staff/review/${r.id}`}>{r.summary}</Link>
                   </td>
                   <td className="muted">{r.sourceCode ?? '—'}</td>
                   <td className="muted">{fmtBaku(r.openedAt)}</td>

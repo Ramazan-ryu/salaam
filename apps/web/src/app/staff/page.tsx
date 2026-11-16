@@ -7,7 +7,7 @@ export default function Home() {
       <div className="grid2">
         <div className="panel">
           <h2 style={{ marginTop: 0 }}>
-            <Link href="/review">Review queue →</Link>
+            <Link href="/staff/review">Review queue →</Link>
           </h2>
           <p className="muted">
             Every item is checked by a person before it becomes public (D-25). Approve with a resolved place, or reject with a
@@ -16,13 +16,13 @@ export default function Home() {
         </div>
         <div className="panel">
           <h2 style={{ marginTop: 0 }}>
-            <Link href="/events">Events →</Link>
+            <Link href="/staff/events">Events →</Link>
           </h2>
           <p className="muted">Published events, manual entry from an official source link, and cancellations.</p>
         </div>
         <div className="panel">
           <h2 style={{ marginTop: 0 }}>
-            <Link href="/organizer">Organizer submission →</Link>
+            <Link href="/staff/organizer">Organizer submission →</Link>
           </h2>
           <p className="muted">The form organizers use. Submissions land in the review queue — never directly public.</p>
         </div>

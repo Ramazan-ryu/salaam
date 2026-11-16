@@ -63,7 +63,7 @@ export default function ReviewTask({ params }: { params: Promise<{ id: string }>
   return (
     <main>
       <p>
-        <Link href="/review">← Review queue</Link>
+        <Link href="/staff/review">← Review queue</Link>
       </p>
       <h1>{detail?.task.summary ?? 'Review task'}</h1>
       {error && <div className="error">{error}</div>}

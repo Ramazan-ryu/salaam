@@ -1,0 +1,107 @@
+# Salaam — LOCAL DEVELOPMENT environment (not production: DEV_AUTH is on, sample data is seeded).
+#
+#   docker compose up -d                          core: database only (run api/web natively with pnpm)
+#   docker compose --profile full up --build -d   everything in containers: db + migrate/seed + api + web
+#   docker compose --profile tools up -d          + Adminer database browser
+#   docker compose --profile storage up -d        + MinIO (S3-compatible), needed from media uploads onward
+#
+# All ports bind to 127.0.0.1 only. See docs/DOCKER_ARCHITECTURE.md and docs/LOCAL_DEVELOPMENT.md.
+name: salaam
+
+x-dev-db-url: &db-url postgres://salaam:salaam@db:5432/salaam_dev
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: salaam
+      POSTGRES_PASSWORD: salaam # local-only credential
+      POSTGRES_DB: salaam_dev
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./infra/db-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U salaam -d salaam_dev"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+    stop_grace_period: 30s
+
+  # One-shot: apply migrations, then seed reference + clearly-labelled sample data.
+  migrate:
+    profiles: ["full"]
+    build: { context: ., dockerfile: infra/docker/api.Dockerfile }
+    image: salaam/api:dev
+    environment:
+      DATABASE_URL: *db-url
+      NODE_ENV: development
+    command: ["sh", "-c", "node dist/db/migrate.js && node dist/db/seed.js"]
+    depends_on:
+      db: { condition: service_healthy }
+    restart: "no"
+
+  api:
+    profiles: ["full"]
+    image: salaam/api:dev
+    environment:
+      DATABASE_URL: *db-url
+      NODE_ENV: development
+      API_PORT: "4000"
+      DEV_AUTH: "true" # DEV-ONLY identity stand-in until spike S-AUTH (ADR-0010)
+      CORS_ORIGIN: http://localhost:3000
+    ports:
+      - "127.0.0.1:4000:4000"
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    restart: unless-stopped
+
+  web:
+    profiles: ["full"]
+    build:
+      context: .
+      dockerfile: infra/docker/web.Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:4000 # what the browser on your machine calls
+    image: salaam/web:dev
+    environment:
+      API_INTERNAL_URL: http://api:4000 # what the web server calls inside the Docker network
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      api: { condition: service_healthy }
+    restart: unless-stopped
+
+  adminer:
+    profiles: ["tools"]
+    image: adminer:5
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      db: { condition: service_healthy }
+
+  minio:
+    profiles: ["storage"]
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: salaam
+      MINIO_ROOT_PASSWORD: salaam-dev-only
+    ports:
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9001:9001"
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db-data:
+  minio-data:

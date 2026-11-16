@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      db:
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_USER: salaam
+          POSTGRES_PASSWORD: salaam
+          POSTGRES_DB: salaam_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U salaam -d salaam_test"
+          --health-interval 5s --health-timeout 3s --health-retries 20
+    env:
+      TEST_DATABASE_URL: postgres://salaam:salaam@localhost:5432/salaam_test
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - name: Migrate test database
+        run: pnpm --filter @salaam/api exec ts-node --transpile-only src/db/migrate.ts
+        env:
+          DATABASE_URL: ${{ env.TEST_DATABASE_URL }}
+      - run: pnpm test
+      - run: pnpm build
+      - name: Validate compose file
+        run: docker compose --profile full --profile tools --profile storage config -q
+
+  docker-images:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    needs: check
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build API image
+        run: docker build -f infra/docker/api.Dockerfile -t salaam/api:ci .
+      - name: Build web image
+        run: docker build -f infra/docker/web.Dockerfile -t salaam/web:ci .
+      - name: Smoke test full stack
+        run: |
+          docker compose --profile full up -d --wait --wait-timeout 180
+          curl -fsS http://localhost:4000/v1/health
+          curl -fsS -o /dev/null http://localhost:3000/
+          curl -fsS "http://localhost:4000/v1/discover?lens=weekend" | grep -q '"items"'
+      - name: Logs on failure
+        if: failure()
+        run: docker compose --profile full logs --no-color
+      - if: always()
+        run: docker compose --profile full down -v

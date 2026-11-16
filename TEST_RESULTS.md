@@ -1,0 +1,26 @@
+# Test Results
+
+Only results that were actually executed are recorded here.
+
+## 2026-11-17 (M-VS1)
+
+| Suite / check | Command | Result |
+|---|---|---|
+| API integration (real PostgreSQL 16 + PostGIS) | `pnpm --filter @salaam/api test` | ✅ 31/31 (review-flow 12, invariants 11, time/geo/i18n 6, synthetic isolation 2) |
+| Typecheck all packages | `pnpm typecheck` | ✅ |
+| Build all packages (incl. Next.js standalone) | `pnpm build` | ✅ |
+| Compose config (core, full, tools, storage, full+tools) | `docker compose … config` | ✅ valid |
+| API image runtime set: migrate + seed + serve + HEALTHCHECK | executed natively from the copied runtime files | ✅ |
+| Web image runtime set: standalone server, `/`, `/discover`, `/staff/review` | executed natively | ✅ 200 |
+| Backup → restore into fresh DB | `make backup`, `infra/scripts/restore.sh` | ✅ identical row counts |
+| Visual check (Playwright + Chrome), mobile 390×844 and desktop 1366×860 | `design/screenshots/01–07` | ✅ no console errors |
+| `docker compose up` on a Docker engine | — | ❌ not run: base images cannot be pulled here (BL-03) |
+| GitHub Actions CI | — | ⏳ will run after the repository is pushed (BL-01) |
+
+### What the tests prove
+- Pending or rejected submissions are never public; only a curator decision publishes (D-25), backed by a DB CHECK.
+- Automation above L1 is refused even for admins.
+- Cancellation is human, audited, and removes the item from the feed.
+- Location: precise geohashes rejected; radius filter works; location answers are `private, no-store`.
+- No invented prices; unknown start time is flagged; language fallback works.
+- Synthetic data is invisible in production; staff endpoints are closed without real auth.

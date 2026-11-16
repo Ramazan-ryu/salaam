@@ -160,6 +160,8 @@ export const sources = pgTable('sources', {
   evidenceRef: text('evidence_ref'),
   attribution: text('attribution'),
   retentionDays: integer('retention_days').notNull().default(90),
+  /** Synthetic/sample data (e.g. DS-003). Never shown publicly in production. */
+  isSynthetic: boolean('is_synthetic').notNull().default(false),
   ...timestamps,
 });
 

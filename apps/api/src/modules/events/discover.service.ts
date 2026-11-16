@@ -4,6 +4,7 @@ import { sql, type SQL } from 'drizzle-orm';
 import { decodeGeohash } from '../../common/geohash';
 import { ProblemError } from '../../common/problem.filter';
 import { lensWindow, type Lens } from '../../common/time';
+import { CONFIG, type AppConfig } from '../../config';
 import { DB, type Db } from '../../db/client';
 
 export interface DiscoverQuery {
@@ -38,6 +39,7 @@ interface Row {
   price_max: string | null;
   currency: string | null;
   ticket_url: string | null;
+  synthetic: boolean;
   source_url: string | null;
   source_name: string | null;
   place_id: string;
@@ -60,7 +62,16 @@ const PUBLIC_EVENT = sql`e.verification_status IN ('auto_approved','staff_verifi
 
 @Injectable()
 export class DiscoverService {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  /** Synthetic sources (seed/sample data) are hidden from public results in production. */
+  private readonly publicFilter: SQL;
+
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    @Inject(CONFIG) config: AppConfig,
+  ) {
+    this.publicFilter =
+      config.NODE_ENV === 'production' ? sql`${PUBLIC_EVENT} AND NOT COALESCE(s.is_synthetic, false)` : PUBLIC_EVENT;
+  }
 
   async discover(q: DiscoverQuery) {
     const now = q.now ?? new Date();
@@ -76,7 +87,7 @@ export class DiscoverService {
     }
 
     const filters: SQL[] = [
-      PUBLIC_EVENT,
+      this.publicFilter,
       sql`e.lifecycle_status = 'scheduled' AND o.lifecycle_status = 'scheduled'`,
       sql`o.starts_at < ${to.toISOString()}::timestamptz`,
       sql`COALESCE(o.ends_at, o.starts_at + interval '3 hours') > ${from.toISOString()}::timestamptz`,
@@ -107,7 +118,7 @@ export class DiscoverService {
   }
 
   async occurrence(id: string, locale: Locale) {
-    const rows = await this.query(sql`${PUBLIC_EVENT} AND o.id = ${id}::uuid`, sql`NULL::float8`, sql`o.starts_at`, 1);
+    const rows = await this.query(sql`${this.publicFilter} AND o.id = ${id}::uuid`, sql`NULL::float8`, sql`o.starts_at`, 1);
     const row = rows[0];
     if (!row) throw new ProblemError(404, 'OCCURRENCE_NOT_FOUND', 'Not found');
     return this.present(row, locale);
@@ -118,7 +129,7 @@ export class DiscoverService {
       SELECT o.id AS occurrence_id, o.starts_at, o.ends_at, o.time_unknown, o.lifecycle_status, o.availability,
              e.id AS event_id, e.title, e.description, e.original_locale, e.trust_tier, e.verification_status,
              e.last_verified_at, e.is_free, e.price_min, e.price_max, e.currency, e.ticket_url, e.source_url,
-             s.name AS source_name,
+             s.name AS source_name, COALESCE(s.is_synthetic, false) AS synthetic,
              p.id AS place_id, p.name AS place_name, p.kind AS place_kind, p.lat, p.lng,
              ${distance} AS distance_km,
              (SELECT array_agg(c.slug ORDER BY c.sort) FROM event_categories ec JOIN categories c ON c.id = ec.category_id WHERE ec.event_id = e.id) AS categories,
@@ -181,7 +192,7 @@ export class DiscoverService {
         badge: trustBadge(r.trust_tier, r.verification_status),
         unconfirmedFields: unconfirmed,
       },
-      attribution: { sourceName: r.source_name, url: r.source_url },
+      attribution: { sourceName: r.source_name, url: r.source_url, synthetic: r.synthetic },
     };
   }
 }
