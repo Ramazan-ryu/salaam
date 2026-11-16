@@ -24,6 +24,7 @@ Status tracking: `Proposed` → `Accepted` / `Rejected` → `Superseded by ADR-n
 | [ADR-0018](./ADR-0018-localization-strategy.md) | Localization strategy (az/ru/en) | Proposed | — | D-17 |
 | [ADR-0019](./ADR-0019-status-model-two-axes.md) | Content status model (trust, verification, lifecycle, availability) | Proposed | — | — |
 | [ADR-0020](./ADR-0020-api-rest-openapi-contract-first.md) | REST + OpenAPI, contract-first | Proposed | — | — |
+| [ADR-0021](./ADR-0021-orm-drizzle.md) | Drizzle ORM for PostgreSQL access | Proposed (reversible) | — | — |
 
 ## Template
 

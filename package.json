@@ -1,0 +1,21 @@
+{
+  "name": "salaam",
+  "private": true,
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "dev:api": "pnpm --filter @salaam/api dev",
+    "dev:web": "pnpm --filter @salaam/web dev",
+    "db:migrate": "pnpm --filter @salaam/api db:migrate",
+    "db:seed": "pnpm --filter @salaam/api db:seed"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.0",
+    "typescript": "^5.8.0"
+  }
+}
