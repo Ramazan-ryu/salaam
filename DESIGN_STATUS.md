@@ -11,4 +11,6 @@
 | Design tokens | In CSS variables | JSON/Figma-compatible export open (TB-14) | `public.css` |
 | Figma | — | No connector in this environment (BL-06) | — |
 
+Shareable preview: **https://claude.ai/artifact/GMnhhEdrQAW9ADZXbxbLYH** — a static snapshot of the real running pages (az/ru/en, home/discover/near me/event pages, sample data). Rebuild: run the app, then `python3 infra/scripts/preview/capture.py && python3 infra/scripts/preview/build.py`, republish. It is a snapshot, not a live deployment.
+
 Screenshots in `design/screenshots/` are real captures of the running app (Chrome via Playwright), not mockups.

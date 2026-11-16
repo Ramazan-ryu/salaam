@@ -2,6 +2,10 @@
 
 Newest first. Short, factual entries; details live in commits.
 
+## 2026-11-17 — Preview for the founder
+- 30 s mobile walkthrough video of the real app; static snapshot preview published (https://claude.ai/artifact/GMnhhEdrQAW9ADZXbxbLYH), scripts in `infra/scripts/preview/`.
+- TB-06 research done; implementation paused (Better Auth ESM vs Jest), see NEXT_ACTIONS.
+
 ## 2026-11-17 — TB-05 API contract
 - OpenAPI 3.1 generated from the zod schemas → `docs/openapi.json`; `/v1/openapi.json` + Swagger UI `/v1/docs` outside production.
 - Web types generated from the spec (`apps/web/src/lib/api-types.ts`), replacing hand-written types.
