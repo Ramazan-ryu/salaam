@@ -33,6 +33,14 @@ body {{ margin: 0; background: #fbf7f2; }}
     window.scrollTo(0, 0);
   }}
   window.addEventListener('hashchange', show);
+  // "Mixed" mood: the live app cycles moods with JavaScript; the snapshot does the same with the drawn expressions.
+  var moods = ['mood-calm', 'mood-energetic', 'mood-curious'], k = 0;
+  setInterval(function () {{
+    k = (k + 1) % moods.length;
+    var cur = document.querySelector('section[data-view]:not([hidden])');
+    if (!cur || /-(calm|energetic|curious)$/.test(cur.getAttribute('data-view'))) return;
+    cur.querySelectorAll('svg.alive').forEach(function (s) {{ s.classList.remove.apply(s.classList, moods); s.classList.add(moods[k]); }});
+  }}, 5200);
   show();
 }})();
 </script>

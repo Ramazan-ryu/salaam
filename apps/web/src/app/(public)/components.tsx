@@ -2,35 +2,44 @@ import Link from 'next/link';
 import { fmtKm, fmtWhen, type Dict, type Locale } from '@/lib/i18n';
 import { priceLabel, type OccurrenceItem } from '@/lib/public-api';
 
-/** Placeholder companion (not final avatar art — see docs/AVATAR_ART_SPEC.md). Idle: breathe, blink, wave twice. */
+/**
+ * Placeholder companion — full-body proportions (founder feedback 2026-11-17). Not final avatar art
+ * (docs/AVATAR_ART_SPEC.md). Idle: breathe, blink, wave twice; all motion off with prefers-reduced-motion.
+ */
 export function Avatar({ label }: { label: string }) {
+  const skin = '#C98E6B';
   return (
-    <svg className="avatar" viewBox="0 0 150 210" role="img" aria-label={label}>
-      <ellipse cx="72" cy="202" rx="44" ry="6" fill="#0D5F5B" opacity="0.12" />
+    <svg className="avatar" viewBox="0 0 160 320" role="img" aria-label={label}>
+      <ellipse cx="80" cy="310" rx="50" ry="7" fill="#0D5F5B" opacity="0.14" />
       <g className="breath">
-        <rect x="50" y="150" width="17" height="48" rx="8" fill="#2F3A56" />
-        <rect x="77" y="150" width="17" height="48" rx="8" fill="#2F3A56" />
-        <rect x="44" y="193" width="27" height="10" rx="5" fill="#1B1A1F" />
-        <rect x="74" y="193" width="27" height="10" rx="5" fill="#1B1A1F" />
-        <path d="M40 112 C40 96 54 88 72 88 C90 88 104 96 104 112 L106 160 L38 160 Z" fill="#E8603C" />
-        <path d="M72 88 L72 160" stroke="#C94E2D" strokeWidth="2" />
-        <path d="M42 106 C30 112 26 134 30 150" stroke="#E8603C" strokeWidth="13" strokeLinecap="round" fill="none" />
-        <circle cx="30" cy="152" r="7" fill="#C98E6B" />
+        <rect x="56" y="186" width="21" height="112" rx="10" fill="#2F3A56" />
+        <rect x="83" y="186" width="21" height="112" rx="10" fill="#2F3A56" />
+        <rect x="44" y="290" width="36" height="15" rx="7.5" fill="#1B1A1F" />
+        <rect x="80" y="290" width="36" height="15" rx="7.5" fill="#1B1A1F" />
+        <rect x="46" y="293" width="12" height="4" rx="2" fill="#FFFFFF" opacity="0.5" />
+        <rect x="102" y="293" width="12" height="4" rx="2" fill="#FFFFFF" opacity="0.5" />
+        <path d="M44 112 C44 97 59 90 80 90 C101 90 116 97 116 112 L119 196 L41 196 Z" fill="#E8603C" />
+        <path d="M70 91 L80 106 L90 91 Z" fill="#F6E3D6" />
+        <path d="M80 106 L80 196" stroke="#C94E2D" strokeWidth="2" />
+        <rect x="41" y="186" width="78" height="10" rx="3" fill="#C94E2D" />
+        <rect x="52" y="140" width="16" height="12" rx="3" fill="#C94E2D" opacity="0.6" />
+        <path d="M47 108 C33 122 29 152 31 182" stroke="#E8603C" strokeWidth="15" strokeLinecap="round" fill="none" />
+        <circle cx="31" cy="188" r="8.5" fill={skin} />
         <g className="wave">
-          <path d="M102 104 C116 96 122 78 120 60" stroke="#E8603C" strokeWidth="13" strokeLinecap="round" fill="none" />
-          <circle cx="120" cy="56" r="8" fill="#C98E6B" />
+          <path d="M113 106 C129 96 136 74 132 52" stroke="#E8603C" strokeWidth="15" strokeLinecap="round" fill="none" />
+          <circle cx="132" cy="45" r="9.5" fill={skin} />
         </g>
-        <rect x="64" y="76" width="16" height="16" rx="6" fill="#C98E6B" />
-        <circle cx="72" cy="56" r="30" fill="#C98E6B" />
-        <path d="M42 54 C40 30 58 20 74 22 C92 22 104 34 102 52 C96 42 84 38 72 40 C60 40 50 46 42 54 Z" fill="#2B1E1A" />
-        <circle cx="44" cy="44" r="9" fill="#2B1E1A" />
+        <rect x="72" y="76" width="16" height="18" rx="6" fill={skin} />
+        <circle cx="80" cy="54" r="27" fill={skin} />
+        <path d="M53 52 C51 29 67 21 82 23 C99 23 109 34 107 50 C101 41 91 37 80 39 C68 39 59 44 53 52 Z" fill="#2B1E1A" />
+        <circle cx="55" cy="40" r="8.5" fill="#2B1E1A" />
         <g className="eyes">
-          <circle cx="61" cy="58" r="3.2" fill="#1B1A1F" />
-          <circle cx="83" cy="58" r="3.2" fill="#1B1A1F" />
+          <circle cx="71" cy="57" r="3.2" fill="#1B1A1F" />
+          <circle cx="89" cy="57" r="3.2" fill="#1B1A1F" />
         </g>
-        <path d="M63 69 C68 75 76 75 81 69" stroke="#1B1A1F" strokeWidth="2.6" strokeLinecap="round" fill="none" />
-        <circle cx="54" cy="66" r="4" fill="#E8603C" opacity="0.25" />
-        <circle cx="90" cy="66" r="4" fill="#E8603C" opacity="0.25" />
+        <path d="M72 67 C77 73 83 73 88 67" stroke="#1B1A1F" strokeWidth="2.6" strokeLinecap="round" fill="none" />
+        <circle cx="63" cy="65" r="4" fill="#E8603C" opacity="0.25" />
+        <circle cx="97" cy="65" r="4" fill="#E8603C" opacity="0.25" />
       </g>
     </svg>
   );

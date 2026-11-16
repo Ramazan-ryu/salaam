@@ -1,18 +1,30 @@
 import Link from 'next/link';
 import { DICTS, fmtKm, fmtToday, fmtWhen, greeting, type Dict, type Locale } from '@/lib/i18n';
 import { getLocale } from '@/lib/locale-server';
-import { priceLabel, serverGet, type DiscoverResponse, type OccurrenceItem } from '@/lib/public-api';
+import { onePerEvent, priceLabel, serverGet, type DiscoverResponse, type OccurrenceItem } from '@/lib/public-api';
 import { LangSwitch, TopNav } from './chrome';
-import { Avatar, EventCard, PinIcon, Skyline } from './components';
+import { MOODS, type Mood } from '@/lib/moods';
+import { CompanionWorld, ITEM_ICONS, ITEM_TONES, type WorldItem } from './companion-world';
+import { EventCard, PinIcon } from './components';
 
 export const dynamic = 'force-dynamic';
 
 const LENSES = ['now', 'tonight', 'weekend'] as const;
 type HomeLens = (typeof LENSES)[number];
 
-/** Rule-based companion line (no AI): the soonest verified item in the chosen lens, with its reasons. */
-function suggestion(items: OccurrenceItem[], t: Dict, locale: Locale) {
-  const pick = items.find((i) => i.lifecycle === 'scheduled');
+/** Which kinds of events suit a mood (rule-based, explainable — no AI). */
+const MOOD_CATEGORIES: Record<Mood, string[]> = {
+  calm: ['exhibition_culture', 'cinema', 'community_free'],
+  energetic: ['music', 'workshop_talk'],
+  curious: ['workshop_talk', 'exhibition_culture'],
+};
+
+/** Rule-based companion line (no AI): the soonest verified item in the chosen lens (and mood), with its reasons. */
+function suggestion(items: OccurrenceItem[], t: Dict, locale: Locale, mood?: Mood) {
+  const scheduled = items.filter((i) => i.lifecycle === 'scheduled');
+  // Categories are in order of preference: the first category with an event wins.
+  const byMood = mood ? MOOD_CATEGORIES[mood].map((c) => scheduled.find((i) => i.event.categories.includes(c))).find(Boolean) : undefined;
+  const pick = byMood ?? scheduled[0];
   if (!pick) return null;
   const reasons = [
     pick.timeUnknown ? fmtWhen(pick.startsAt, locale, { timeUnknown: true }) : fmtWhen(pick.startsAt, locale),
@@ -22,16 +34,41 @@ function suggestion(items: OccurrenceItem[], t: Dict, locale: Locale) {
   return { item: pick, why: reasons.join(' · ') };
 }
 
-export default async function Home({ searchParams }: { searchParams: Promise<{ lens?: string }> }) {
+export default async function Home({ searchParams }: { searchParams: Promise<{ lens?: string; mood?: string }> }) {
   const locale = await getLocale();
   const t = DICTS[locale];
   const sp = await searchParams;
   const lens: HomeLens = (LENSES as readonly string[]).includes(sp.lens ?? '') ? (sp.lens as HomeLens) : 'tonight';
-  const res = await serverGet<DiscoverResponse>(`/v1/discover?lens=${lens}&limit=8`, locale);
-  const items = res.ok ? res.data.items : [];
-  const s = suggestion(items, t, locale);
+  const mood = (MOODS as string[]).includes(sp.mood ?? '') ? (sp.mood as Mood) : undefined;
+  const moodQ = mood ? `&mood=${mood}` : '';
+  const res = await serverGet<DiscoverResponse>(`/v1/discover?lens=${lens}&limit=50`, locale);
+  const all = res.ok ? res.data.items : [];
+  const items = onePerEvent(all).slice(0, 8);
+  const count = (slug: string) => onePerEvent(all).filter((i) => i.event.categories.includes(slug)).length;
+  const worldItems: WorldItem[] = [
+    { key: 'music', label: t.itemMusic },
+    { key: 'exhibition_culture', label: t.itemExhibition },
+    { key: 'workshop_talk', label: t.itemWorkshop },
+    { key: 'cinema', label: t.itemCinema },
+    { key: 'community_free', label: t.itemCommunity },
+  ].map((x) => ({
+    ...x,
+    href: `/discover?lens=${lens}&category=${x.key}`,
+    count: count(x.key),
+    tone: ITEM_TONES[x.key]!,
+    icon: ITEM_ICONS[x.key as keyof typeof ITEM_ICONS],
+  }));
+  worldItems.push({ key: 'near', label: t.nearMe, href: `/discover?lens=${lens}&near=1`, tone: ITEM_TONES.near!, icon: ITEM_ICONS.near });
+  const s = suggestion(all, t, locale, mood);
+  const prefix = mood === 'calm' ? t.suggestCalm : mood === 'energetic' ? t.suggestEnergetic : mood === 'curious' ? t.suggestCurious : t.suggestPrefix;
+  const moodPills: Array<{ key: Mood | undefined; label: string; color: string }> = [
+    { key: undefined, label: t.moodMixed, color: 'linear-gradient(90deg,#0D5F5B,#E8603C,#4D3F7A)' },
+    { key: 'calm', label: t.moodCalm, color: '#0D5F5B' },
+    { key: 'energetic', label: t.moodEnergetic, color: '#E8603C' },
+    { key: 'curious', label: t.moodCurious, color: '#4D3F7A' },
+  ];
   const heading = lens === 'now' ? t.inBakuNow : lens === 'tonight' ? t.inBakuTonight : t.inBakuWeekend;
-  const anySample = items.some((i) => i.attribution.synthetic);
+  const anySample = all.some((i) => i.attribution.synthetic);
 
   return (
     <main>
@@ -52,41 +89,44 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
 
       <div className="home-grid">
         <div className="stage-col">
-          <section className="stage" aria-label={t.avatarLabel}>
-            <Skyline />
-            {s ? (
-              <div className="bubble">
+          <CompanionWorld
+            t={t}
+            items={worldItems}
+            mood={mood}
+            bubble={
+              s ? (
+                <>
+                  <p className="bubble-title">
+                    {prefix} <Link href={`/e/${s.item.id}`}>{s.item.event.title}</Link>
+                  </p>
+                  <p className="bubble-why">{s.why}</p>
+                </>
+              ) : (
                 <p className="bubble-title">
-                  {t.suggestPrefix} {s.item.event.title}
+                  {res.ok ? t.emptyLens : t.apiDown}{' '}
+                  {res.ok && lens !== 'weekend' && <Link href={`/?lens=weekend${moodQ}`}>{t.tryWeekend}</Link>}
                 </p>
-                <p className="bubble-why">{s.why}</p>
-                <div className="bubble-actions">
-                  <Link className="btn btn-primary" href={`/e/${s.item.id}`}>
-                    {t.show}
-                  </Link>
-                  <Link className="btn" href={`/discover?lens=${lens}`}>
-                    {t.suggestOther}
-                  </Link>
-                </div>
-              </div>
-            ) : (
-              <div className="bubble">
-                <p className="bubble-title">{res.ok ? t.emptyLens : t.apiDown}</p>
-                {res.ok && lens !== 'weekend' && (
-                  <div className="bubble-actions">
-                    <Link className="btn btn-primary" href="/?lens=weekend">
-                      {t.tryWeekend}
-                    </Link>
-                  </div>
-                )}
-              </div>
-            )}
-            <Avatar label={t.avatarLabel} />
-          </section>
+              )
+            }
+          />
 
+          <nav className="moods" aria-label={t.moodLabel}>
+            <span className="moods-label">{t.moodLabel}</span>
+            {moodPills.map((p) => (
+              <Link
+                key={p.label}
+                href={`/?lens=${lens}${p.key ? `&mood=${p.key}` : ''}`}
+                className="mood-pill"
+                aria-current={p.key === mood ? 'true' : undefined}
+              >
+                <span className="mood-dot" style={{ background: p.color }} aria-hidden="true" />
+                {p.label}
+              </Link>
+            ))}
+          </nav>
           <nav className="chips" aria-label={t.when}>
             {LENSES.map((l) => (
-              <Link key={l} href={`/?lens=${l}`} className="chip" aria-current={l === lens ? 'true' : undefined}>
+              <Link key={l} href={`/?lens=${l}${moodQ}`} className="chip" aria-current={l === lens ? 'true' : undefined}>
                 {t[l]}
               </Link>
             ))}

@@ -28,3 +28,9 @@ export function priceLabel(item: OccurrenceItem, t: { free: string }): string | 
   const range = p.min !== null && p.max !== null && p.max !== p.min ? `${p.min}–${p.max}` : `${p.min ?? p.max}`;
   return `${range} ${p.currency ?? 'AZN'}`;
 }
+
+/** One card per event: keep the soonest occurrence (lists are sorted by start time or distance). */
+export function onePerEvent(items: OccurrenceItem[]): OccurrenceItem[] {
+  const seen = new Set<string>();
+  return items.filter((i) => (seen.has(i.event.id) ? false : (seen.add(i.event.id), true)));
+}

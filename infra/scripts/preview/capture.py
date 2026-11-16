@@ -10,7 +10,8 @@ REWRITE_JS = r"""
     if (/^https?:\/\//.test(h)) return null;
     const u = new URL(h, location.origin);
     const lens = u.searchParams.get('lens') || 'tonight';
-    if (u.pathname === '/') return `#${loc}-home-${lens}`;
+    const mood = u.searchParams.get('mood');
+    if (u.pathname === '/') return `#${loc}-home-${lens}${mood ? '-' + mood : ''}`;
     if (u.pathname === '/discover') return `#${loc}-discover-${lens}`;
     const m = u.pathname.match(/^\/e\/([0-9a-f-]{36})$/); if (m) return `#${loc}-e-${m[1]}`;
     return '#';
@@ -49,6 +50,8 @@ async def main():
                 views[f'{loc}-{view}'] = await pg.evaluate(REWRITE_JS, [loc, view])
             for l in LENSES:
                 await grab(f'/?lens={l}', f'home-{l}')
+                for m in ['calm','energetic','curious']:
+                    await grab(f'/?lens={l}&mood={m}', f'home-{l}-{m}')
                 await grab(f'/discover?lens={l}', f'discover-{l}')
                 await grab(f'/discover?lens={l}', f'discover-{l}-near', near=True)
             await c.close()

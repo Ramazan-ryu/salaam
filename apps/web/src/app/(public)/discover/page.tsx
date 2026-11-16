@@ -8,7 +8,7 @@ import { DiscoverClient } from './discover-client';
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Kəşf et' };
 
-export default async function DiscoverPage({ searchParams }: { searchParams: Promise<{ lens?: string; category?: string }> }) {
+export default async function DiscoverPage({ searchParams }: { searchParams: Promise<{ lens?: string; category?: string; near?: string }> }) {
   const locale = await getLocale();
   const sp = await searchParams;
   const cats = await serverGet<Category[]>('/v1/categories', locale);
@@ -26,6 +26,7 @@ export default async function DiscoverPage({ searchParams }: { searchParams: Pro
         categories={cats.ok ? cats.data : []}
         initialLens={['now', 'tonight', 'weekend'].includes(sp.lens ?? '') ? (sp.lens as 'now' | 'tonight' | 'weekend') : 'tonight'}
         initialCategory={sp.category ?? ''}
+        initialNear={sp.near === '1'}
       />
     </main>
   );

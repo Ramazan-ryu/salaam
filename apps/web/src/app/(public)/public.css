@@ -60,9 +60,9 @@
 .bubble-why { font-size: 12px; color: var(--muted); }
 .bubble-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .avatar { position: absolute; left: 8px; bottom: 14px; width: 136px; height: 190px; }
-.avatar .breath { transform-origin: 72px 200px; animation: breath 4.2s ease-in-out infinite; }
-.avatar .wave { transform-origin: 104px 104px; animation: wave 2.4s ease-in-out 0.6s 2; }
-.avatar .eyes { transform-origin: 72px 58px; animation: blink 5.5s infinite; }
+.avatar .breath { transform-origin: 80px 305px; animation: breath 4.2s ease-in-out infinite; }
+.avatar .wave { transform-origin: 113px 106px; animation: wave 2.4s ease-in-out 0.6s 2; }
+.avatar .eyes { transform-origin: 80px 57px; animation: blink 5.5s infinite; }
 @keyframes breath { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.015); } }
 @keyframes wave { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-12deg); } 75% { transform: rotate(8deg); } }
 @keyframes blink { 0%, 95%, 100% { transform: scaleY(1); } 97% { transform: scaleY(0.1); } }
@@ -138,3 +138,110 @@
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
 @media (min-width: 720px) { .discover-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1040px) { .discover-grid { grid-template-columns: repeat(3, 1fr); } }
+
+/* ---------- Companion world: avatar in the centre, objects around (founder direction 2026-11-17) ---------- */
+.world { position: relative; margin: 8px 16px 0; height: 580px; border-radius: var(--r-lg); background: var(--accent-soft); overflow: hidden; }
+.world-bubble { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); width: min(300px, calc(100% - 28px)); z-index: 3;
+  background: var(--surface); border-radius: 20px; padding: 12px 14px; box-shadow: 0 6px 18px rgba(13, 95, 91, 0.12); text-align: center; }
+.world-bubble::after { content: ''; position: absolute; left: 50%; bottom: -8px; width: 16px; height: 16px; background: var(--surface); transform: translateX(-50%) rotate(45deg); border-radius: 3px; }
+.world-bubble .bubble-title { font-size: 14px; }
+.world-bubble .bubble-title a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+.world-bubble .bubble-why { margin-top: 4px; }
+.world-avatar { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); width: 200px; height: 400px; z-index: 1; }
+.world-avatar .avatar { position: static; width: 200px; height: 400px; }
+.world-items { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.world-item { position: absolute; pointer-events: auto; display: flex; flex-direction: column; align-items: center; gap: 5px; width: 88px;
+  text-decoration: none; color: var(--ink); }
+.pub a.world-item { color: var(--ink); }
+.world-orb { position: relative; width: 62px; height: 62px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  border: 2px solid #fff; box-shadow: 0 6px 16px rgba(27, 26, 31, 0.14); transition: transform 0.18s ease; }
+.world-item:hover .world-orb, .world-item:focus-visible .world-orb { transform: translateY(-3px) scale(1.06); }
+.world-label { font-size: 12px; font-weight: 700; background: rgba(255, 255, 255, 0.85); padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.world-count { position: absolute; top: -4px; right: -4px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; background: var(--warm); color: #fff;
+  font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; }
+/* Two columns of three, framing the companion */
+.world-item-0 { left: 2px; top: 176px; }
+.world-item-1 { left: 2px; top: 300px; }
+.world-item-2 { left: 2px; top: 424px; }
+.world-item-3 { right: 2px; top: 176px; }
+.world-item-4 { right: 2px; top: 300px; }
+.world-item-5 { right: 2px; top: 424px; }
+@media (prefers-reduced-motion: no-preference) {
+  .world-orb { animation: bob 4s ease-in-out infinite; }
+  .world-item-1 .world-orb, .world-item-4 .world-orb { animation-delay: -1.3s; }
+  .world-item-2 .world-orb, .world-item-5 .world-orb { animation-delay: -2.6s; }
+}
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@media (min-width: 960px) { .world { height: 600px; } }
+
+/* ---------- Living companion: moods (founder feedback 2026-11-17: "more alive, 2–3 moods mixed") ---------- */
+.alive * { transform-box: view-box; }
+.alive .body { transform-origin: 80px 305px; }
+.alive .head { transform-origin: 80px 90px; transition: transform 0.6s ease; }
+.alive .arm-l { transform-origin: 47px 108px; transition: transform 0.6s ease; }
+.alive .arm-r { transform-origin: 113px 108px; transition: transform 0.6s ease; }
+.alive .eyes { transform-origin: 80px 57px; }
+.alive .pupils, .alive .brows path { transition: transform 0.4s ease; }
+.alive .lids { opacity: 0; transition: opacity 0.4s ease; }
+.alive .fx { opacity: 0; transition: opacity 0.5s ease; }
+.alive .phones { opacity: 0; transition: opacity 0.4s ease; }
+.alive .mouth { opacity: 0; transition: opacity 0.25s ease; }
+.alive .cheek { opacity: 0.25; }
+.alive.mood-calm .mouth-calm, .alive.mood-energetic .mouth-energetic, .alive.mood-curious .mouth-curious { opacity: 1; }
+.alive.mood-energetic .phones { opacity: 1; }
+.alive.mood-energetic .cheek { opacity: 0.45; }
+
+/* calm: slow, settled */
+.alive.mood-calm .lids { opacity: 1; }
+.alive.mood-calm .fx-calm { opacity: 0.6; }
+/* energetic: arms up, brows up */
+.alive.mood-energetic .arm-r { transform: rotate(-168deg); }
+.alive.mood-energetic .arm-l { transform: rotate(165deg); }
+.alive.mood-energetic .brows path { transform: translateY(-3px); }
+.alive.mood-energetic .fx-energetic { opacity: 1; }
+/* curious: head tilt, looks at the objects, points */
+.alive.mood-curious .head { transform: rotate(9deg); }
+.alive.mood-curious .pupils { transform: translateX(3.5px); }
+.alive.mood-curious .brow-r { transform: translateY(-4px) rotate(-6deg); }
+.alive.mood-curious .arm-r { transform: rotate(-45deg); }
+.alive.mood-curious .fx-curious { opacity: 1; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .alive .eyes { animation: blink 5s infinite; }
+  .alive.mood-calm .body { animation: sway 6.5s ease-in-out infinite; }
+  .alive.mood-calm .head { animation: nod-slow 7s ease-in-out infinite; }
+  .alive.mood-calm .arm-l { animation: swing-l 6.5s ease-in-out infinite; }
+  .alive.mood-calm .arm-r { animation: swing-r 6.5s ease-in-out infinite; }
+  .alive.mood-calm .fx-calm { animation: drift 6s ease-in-out infinite; }
+  .alive.mood-energetic .body { animation: bounce 0.8s ease-in-out infinite; }
+  .alive.mood-energetic .head { animation: bob-head 0.8s ease-in-out infinite; }
+  .alive.mood-energetic .arm-r { animation: pump-r 0.8s ease-in-out infinite; }
+  .alive.mood-energetic .arm-l { animation: pump-l 0.8s ease-in-out infinite 0.4s; }
+  .alive.mood-energetic .fx-energetic { animation: notes 1.6s ease-in infinite; }
+  .alive.mood-curious .head { animation: wonder 3s ease-in-out infinite; }
+  .alive.mood-curious .body { animation: lean 3s ease-in-out infinite; }
+  .alive.mood-curious .fx-curious { animation: pop 1.5s ease-in-out infinite; transform-origin: 122px 18px; }
+}
+@keyframes sway { 0%, 100% { transform: rotate(-1.5deg) scaleY(1); } 50% { transform: rotate(1.5deg) scaleY(1.012); } }
+@keyframes nod-slow { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes swing-l { 0%, 100% { transform: rotate(3deg); } 50% { transform: rotate(-3deg); } }
+@keyframes swing-r { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes drift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+@keyframes bob-head { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+@keyframes pump-r { 0%, 100% { transform: rotate(-176deg); } 50% { transform: rotate(-152deg); } }
+@keyframes pump-l { 0%, 100% { transform: rotate(174deg); } 50% { transform: rotate(150deg); } }
+@keyframes notes { 0% { transform: translateY(8px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-18px); opacity: 0; } }
+@keyframes wonder { 0%, 100% { transform: rotate(7deg); } 50% { transform: rotate(11deg); } }
+@keyframes lean { 0%, 100% { transform: rotate(1deg); } 50% { transform: rotate(2.5deg); } }
+@keyframes pop { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+
+/* mood picker under the stage */
+.moods { display: flex; gap: 8px; padding: 12px 16px 0; align-items: center; overflow-x: auto; scrollbar-width: none; }
+.moods-label { font-size: 12px; font-weight: 700; color: var(--muted); flex-shrink: 0; }
+.mood-pill { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px; border-radius: 18px;
+  border: 1px solid var(--line-strong); background: var(--surface); font: 600 13px inherit; font-family: inherit; text-decoration: none; }
+.pub a.mood-pill { color: var(--ink); }
+.pub a.mood-pill[aria-current='true'] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.mood-dot { width: 10px; height: 10px; border-radius: 50%; }
+@media (max-width: 420px) { .moods-label { display: none; } .mood-pill { padding: 0 10px; } }

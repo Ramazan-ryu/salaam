@@ -16,6 +16,10 @@ This file records engineering decisions taken autonomously during implementation
 | ED-09 | 2026-11-17 | Separate `prod-deps` Docker stage | Removed compilers/test tools: 206 MB → 47 MB app files | `pnpm deploy` (packlist drops `dist/` via .gitignore) | Yes |
 | ED-10 | 2026-11-17 | Next.js `output: 'standalone'` for the web image | Small self-contained server | Full `node_modules` image | Yes |
 | ED-11 | 2026-11-17 | Only implemented destinations in the tab bar (Home, Discover) | Directive: never present mockups as working features | Show Saved/Profile as disabled | Yes |
+| FD-01 | 2026-11-17 | **Founder direction:** companion stands in the centre, full body; event "objects" around it (music, exhibitions, workshops, cinema, community, near me) with live counts | Founder feedback on Concept A | Concept A (companion at the side) | Yes |
+| FD-02 | 2026-11-17 | **Founder direction:** companion is alive with moods — calm, energetic, curious, and "mixed" (cycles); mood also steers the suggestion via ordered category preferences | Founder feedback: "more alive… 2–3 moods mixed" | Single idle animation | Yes |
+| ED-17 | 2026-11-17 | Expressions drawn once, switched by CSS mood classes; motion only under `prefers-reduced-motion: no-preference` | Works without JS (snapshot) and respects accessibility | React-conditional mouths | Yes |
+| ED-18 | 2026-11-17 | Lists show one card per event (soonest occurrence); counts are events, not dates | Repeated cards for multi-date events looked broken | — | Yes |
 | ED-13 | 2026-11-17 | OpenAPI from zod via `@asteasolutions/zod-to-openapi` v7 (MIT) | Single source of truth = validation schemas; no decorators on every route | `nestjs-zod` + `@nestjs/swagger` (heavier, decorator-driven); hand-written YAML (drifts) | Yes |
 | ED-14 | 2026-11-17 | Web types generated with `openapi-typescript` (MIT); no generated SDK | Compile-time contract for the web with zero runtime code | openapi-fetch / orval SDK | Yes |
 | ED-15 | 2026-11-17 | Swagger UI from `swagger-ui-dist` (Apache-2.0) served by the API, non-production only | No CDN, no extra service | Separate docs site | Yes |

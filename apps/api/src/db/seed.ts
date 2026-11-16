@@ -2,7 +2,7 @@
  * Development seed: reference data + clearly fictional SAMPLE content (DS-003, never public).
  * Run: pnpm db:seed
  */
-import { eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { loadDotEnv } from '../env';
 import { normalizeLocalized } from '../common/text';
 import { localToUtc, addDays, localParts } from '../common/time';
@@ -78,61 +78,94 @@ export async function seedReference(db: Db, opts: { approveOrganizerPortal: bool
   return baku!;
 }
 
+type SampleEvent = {
+  title: { az: string; ru?: string; en?: string };
+  place: number;
+  time: string;
+  days: number[];
+  cats: string[];
+  free?: boolean;
+};
+
+/**
+ * Clearly fictional SAMPLE content (source DS-003, is_synthetic): every title ends with "(nümunə)/(пример)/(sample)",
+ * every place is called "Nümunə …". Idempotent: re-running adds missing places/events and tops up dates for the
+ * coming week, so the dev app always has something to show. Never runs in production.
+ */
 async function seedSamples(db: Db, cityId: string) {
   const [ds3] = await db.select().from(sources).where(eq(sources.code, 'DS-003'));
-  const existing = await db.select({ id: events.id }).from(events).where(eq(events.sourceId, ds3!.id));
-  if (existing.length) return;
-
   const samplePlaces = [
     { name: { az: 'Nümunə Caz Klubu' }, kind: 'venue' as const, lat: 40.3667, lng: 49.8352 },
-    { name: { az: 'Nümunə Qalereya' }, kind: 'gallery' as const, lat: 40.3655, lng: 49.8400 },
-    { name: { az: 'Nümunə Emalatxana' }, kind: 'venue' as const, lat: 40.3780, lng: 49.8530 },
+    { name: { az: 'Nümunə Qalereya' }, kind: 'gallery' as const, lat: 40.3655, lng: 49.84 },
+    { name: { az: 'Nümunə Emalatxana' }, kind: 'venue' as const, lat: 40.378, lng: 49.853 },
+    { name: { az: 'Nümunə Açıq Kino Həyəti' }, kind: 'venue' as const, lat: 40.361, lng: 49.835 },
+    { name: { az: 'Nümunə Park' }, kind: 'park' as const, lat: 40.372, lng: 49.845 },
+    { name: { az: 'Nümunə Kitab Kafesi' }, kind: 'cafe' as const, lat: 40.38, lng: 49.84 },
   ];
-  const inserted = await db
-    .insert(places)
-    .values(
-      samplePlaces.map((p) => ({
-        cityId,
-        ...p,
-        nameNormalized: normalizeLocalized(p.name),
-        trustTier: 'T1_official' as const,
-        verificationStatus: 'staff_verified' as const,
-        lastVerifiedAt: new Date(),
-      })),
-    )
-    .returning();
+  const placeIds: string[] = [];
+  for (const p of samplePlaces) {
+    const nameNormalized = normalizeLocalized(p.name);
+    const [found] = await db.select({ id: places.id }).from(places).where(eq(places.nameNormalized, nameNormalized));
+    if (found) {
+      placeIds.push(found.id);
+      continue;
+    }
+    const [row] = await db
+      .insert(places)
+      .values({ cityId, ...p, nameNormalized, trustTier: 'T1_official', verificationStatus: 'staff_verified', lastVerifiedAt: new Date() })
+      .returning({ id: places.id });
+    placeIds.push(row!.id);
+  }
   const cats = await db.select().from(categories);
   const cat = (slug: string) => cats.find((c) => c.slug === slug)!.id;
   const today = localParts(new Date()).date;
+  const wd = new Date(`${today}T12:00:00+04:00`).getUTCDay(); // 0 = Sunday
+  const toFriday = (5 - wd + 7) % 7;
+  const weekend = [toFriday, toFriday + 1, toFriday + 2];
 
-  const samples = [
-    { title: { az: 'Caz axşamı: canlı trio (nümunə)', ru: 'Джазовый вечер: трио (пример)', en: 'Jazz night: live trio (sample)' }, place: 0, time: '20:00', cat: 'music' },
-    { title: { az: 'Şəhər fotoları sərgisi (nümunə)', en: 'City photography exhibition (sample)' }, place: 1, time: '18:00', cat: 'exhibition_culture' },
-    { title: { az: 'Keramika emalatxanası (nümunə)', ru: 'Мастер-класс по керамике (пример)' }, place: 2, time: '18:30', cat: 'workshop_talk' },
+  const samples: SampleEvent[] = [
+    { title: { az: 'Caz axşamı: canlı trio (nümunə)', ru: 'Джазовый вечер: трио (пример)', en: 'Jazz night: live trio (sample)' }, place: 0, time: '20:00', days: [0, 1, 2, ...weekend], cats: ['music'] },
+    { title: { az: 'Şəhər fotoları sərgisi (nümunə)', ru: 'Выставка городской фотографии (пример)', en: 'City photography exhibition (sample)' }, place: 1, time: '18:00', days: [0, 1, 2, ...weekend], cats: ['exhibition_culture'] },
+    { title: { az: 'Keramika emalatxanası (nümunə)', ru: 'Мастер-класс по керамике (пример)', en: 'Ceramics workshop (sample)' }, place: 2, time: '18:30', days: [0, 2, weekend[1]!], cats: ['workshop_talk'] },
+    { title: { az: 'Açıq havada kino gecəsi (nümunə)', ru: 'Кино под открытым небом (пример)', en: 'Open-air cinema night (sample)' }, place: 3, time: '21:00', days: [0, 1, ...weekend], cats: ['cinema'] },
+    { title: { az: 'Parkda könüllü təmizlik (nümunə)', ru: 'Волонтёрская уборка парка (пример)', en: 'Volunteer park clean-up (sample)' }, place: 4, time: '10:00', days: [weekend[1]!, weekend[2]!], cats: ['community_free'], free: true },
+    { title: { az: 'Kitab klubu görüşü (nümunə)', ru: 'Встреча книжного клуба (пример)', en: 'Book club meetup (sample)' }, place: 5, time: '19:00', days: [0, weekend[0]!], cats: ['community_free', 'workshop_talk'], free: true },
+    { title: { az: 'Dəniz kənarında DJ set (nümunə)', ru: 'DJ-сет у моря (пример)', en: 'Seaside DJ set (sample)' }, place: 3, time: '22:30', days: [weekend[0]!, weekend[1]!], cats: ['music'] },
+    { title: { az: 'Uşaqlar üçün rəsm dərsi (nümunə)', ru: 'Урок рисования для детей (пример)', en: "Kids' drawing class (sample)" }, place: 2, time: '11:00', days: [weekend[1]!, weekend[2]!], cats: ['workshop_talk'] },
   ];
-  for (const [i, s] of samples.entries()) {
-    const [ev] = await db
-      .insert(events)
-      .values({
-        cityId,
-        primaryPlaceId: inserted[s.place]!.id,
-        title: s.title,
-        originalLocale: 'az',
-        titleNormalized: normalizeLocalized(s.title),
-        trustTier: 'T1_official',
-        verificationStatus: 'staff_verified',
-        sourceId: ds3!.id,
-        lastVerifiedAt: new Date(),
-        publishedAt: new Date(),
-      })
-      .returning();
-    await db.insert(eventCategories).values({ eventId: ev!.id, categoryId: cat(s.cat) });
-    for (let d = 0; d < 3; d++) {
-      await db.insert(occurrences).values({
-        eventId: ev!.id,
-        placeId: inserted[s.place]!.id,
-        startsAt: localToUtc(addDays(today, d + i % 2), s.time),
-      });
+
+  for (const s of samples) {
+    const titleNormalized = normalizeLocalized(s.title);
+    // Match on the Azerbaijani title within DS-003, so adding translations later does not create a duplicate.
+    let [ev] = await db
+      .select({ id: events.id })
+      .from(events)
+      .where(and(eq(events.sourceId, ds3!.id), sql`${events.title} ->> 'az' = ${s.title.az}`));
+    if (!ev) {
+      [ev] = await db
+        .insert(events)
+        .values({
+          cityId,
+          primaryPlaceId: placeIds[s.place]!,
+          title: s.title,
+          originalLocale: 'az',
+          titleNormalized,
+          trustTier: 'T1_official',
+          verificationStatus: 'staff_verified',
+          sourceId: ds3!.id,
+          lastVerifiedAt: new Date(),
+          publishedAt: new Date(),
+          ...(s.free ? { isFree: true } : {}),
+        })
+        .returning({ id: events.id });
+      await db.insert(eventCategories).values(s.cats.map((c) => ({ eventId: ev!.id, categoryId: cat(c) })));
+    }
+    const existing = await db.select({ startsAt: occurrences.startsAt }).from(occurrences).where(eq(occurrences.eventId, ev!.id));
+    const have = new Set(existing.map((o) => o.startsAt.getTime()));
+    for (const d of new Set(s.days)) {
+      const startsAt = localToUtc(addDays(today, d), s.time);
+      if (have.has(startsAt.getTime())) continue;
+      await db.insert(occurrences).values({ eventId: ev!.id, placeId: placeIds[s.place]!, startsAt });
     }
   }
 }

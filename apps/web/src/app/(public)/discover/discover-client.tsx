@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { coarseGeohash } from '@/lib/geohash';
 import { DICTS, type Locale } from '@/lib/i18n';
-import type { Category, DiscoverResponse } from '@/lib/public-api';
+import { onePerEvent, type Category, type DiscoverResponse } from '@/lib/public-api';
 import { EventCard } from '../components';
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
@@ -15,11 +15,13 @@ export function DiscoverClient({
   categories,
   initialLens,
   initialCategory,
+  initialNear = false,
 }: {
   locale: Locale;
   categories: Category[];
   initialLens: Lens;
   initialCategory: string;
+  initialNear?: boolean;
 }) {
   const t = DICTS[locale];
   const [lens, setLens] = useState<Lens>(initialLens);
@@ -54,6 +56,12 @@ export function DiscoverClient({
     return () => ctrl.abort();
   }, [lens, category, near, radiusKm, locale]);
 
+  // Opened from the companion's map pin: ask for the area once (the browser asks permission).
+  useEffect(() => {
+    if (initialNear) toggleNear();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const toggleNear = () => {
     if (near.state === 'on' || near.state === 'locating') return setNear({ state: 'off' });
     if (!('geolocation' in navigator)) return setNear({ state: 'denied' });
@@ -65,7 +73,7 @@ export function DiscoverClient({
     );
   };
 
-  const items = data?.items ?? [];
+  const items = onePerEvent(data?.items ?? []);
 
   return (
     <>

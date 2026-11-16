@@ -2,6 +2,12 @@
 
 Newest first. Short, factual entries; details live in commits.
 
+## 2026-11-17 — Companion World (founder feedback)
+- Home redesigned: full-body companion in the centre, 6 objects around it with live counts (link to Discover filtered), moods calm/energetic/curious/mixed.
+- Sample seed made idempotent and richer (8 labelled events across all categories, weekend-aware dates); removed an unlabelled test event and duplicate samples from the dev DB.
+- Bug fixed: importing a constant from a 'use client' module into a server page (Next.js client reference → 500).
+- Preview republished (95 views incl. moods); video `salaam-demo-moods.mp4`.
+
 ## 2026-11-17 — Preview for the founder
 - 30 s mobile walkthrough video of the real app; static snapshot preview published (https://claude.ai/artifact/GMnhhEdrQAW9ADZXbxbLYH), scripts in `infra/scripts/preview/`.
 - TB-06 research done; implementation paused (Better Auth ESM vs Jest), see NEXT_ACTIONS.
