@@ -1,6 +1,7 @@
 'use client';
 
 import { Html, OrbitControls, OrthographicCamera, useAnimations, useGLTF } from '@react-three/drei';
+import { Bloom, EffectComposer, N8AO, SMAA, Vignette } from '@react-three/postprocessing';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
@@ -463,6 +464,51 @@ function Lights({ tod, scene }: { tod: TimeOfDay; scene: WorldScene }) {
   );
 }
 
+/** Warm string lights along the top of both walls — the cosy accent the references rely on (bloom makes them glow). */
+function FairyLights({ scene, tod }: { scene: WorldScene; tod: TimeOfDay }) {
+  const { half, wallHeight: H } = scene.room;
+  const on = tod === 'evening' || tod === 'night';
+  const pts = useMemo(() => {
+    const out: Array<[number, number, number]> = [];
+    const n = 15;
+    for (let i = 0; i <= n; i++) {
+      const t = i / n;
+      out.push([-half + 0.12 + t * (half * 2 - 0.3), H - 0.32 - Math.sin(t * Math.PI * 3) ** 2 * 0.22, -half + 0.12]);
+      out.push([-half + 0.12, H - 0.32 - Math.sin(t * Math.PI * 3) ** 2 * 0.22, -half + 0.3 + t * (half * 2 - 0.5)]);
+    }
+    return out;
+  }, [half, H]);
+  const colors = ['#FFC46B', '#FFB0A0', '#FFE3A0'];
+  return (
+    <group>
+      {pts.map((p, i) => (
+        <mesh key={i} position={p}>
+          <sphereGeometry args={[0.045, 10, 10]} />
+          <meshStandardMaterial
+            color={colors[i % 3]}
+            emissive={colors[i % 3]}
+            emissiveIntensity={on ? (tod === 'night' ? 6 : 3.5) : 0.25}
+            toneMapped={!on}
+          />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+/** Soft "clay" finish: ambient occlusion in corners and under furniture, glow on lights, gentle vignette. */
+function Finish({ tod }: { tod: TimeOfDay }) {
+  const bloom = tod === 'night' ? 0.95 : tod === 'evening' ? 0.7 : 0.18;
+  return (
+    <EffectComposer multisampling={0} enableNormalPass={false}>
+      <N8AO aoRadius={0.9} distanceFalloff={0.6} intensity={tod === 'night' ? 2.2 : 3.2} color={tod === 'night' ? '#120c22' : '#3a2416'} halfRes quality="medium" />
+      <Bloom mipmapBlur luminanceThreshold={0.92} luminanceSmoothing={0.2} intensity={bloom} radius={0.7} />
+      <SMAA />
+      <Vignette offset={0.32} darkness={tod === 'day' ? 0.32 : 0.5} />
+    </EffectComposer>
+  );
+}
+
 function WorldContents(p: WorldCanvasProps & { scene: WorldScene; celebrate: number; onTapCompanion: () => void }) {
   const { scene } = p;
   const target = useMemo(() => {
@@ -480,6 +526,7 @@ function WorldContents(p: WorldCanvasProps & { scene: WorldScene; celebrate: num
     <>
       <IsoCamera reducedMotion={p.reducedMotion} />
       <Lights tod={p.tod} scene={scene} />
+      <FairyLights scene={scene} tod={p.tod} />
       <Room scene={scene} tod={p.tod} onWindow={() => p.onSelect('near')} windowLabel={p.labels.objects.near} selected={p.selected === 'near'} />
       {scene.objects.map((o) => (
         <Furniture
@@ -500,6 +547,7 @@ function WorldContents(p: WorldCanvasProps & { scene: WorldScene; celebrate: num
         hello={p.labels.hello}
         onTap={p.onTapCompanion}
       />
+      <Finish tod={p.tod} />
     </>
   );
 }

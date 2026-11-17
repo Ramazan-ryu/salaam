@@ -35,6 +35,10 @@ Newest first. Short, factual entries; details live in commits.
 - Problems solved: Postgres had stopped (stale pid) → restarted; Chrome lacks az date data → hand formatter; card/chip links inherited link colour → CSS; API image carried dev tools → separate prod-deps stage; restore errors on extension objects → filtered TOC, `--exit-on-error`.
 - Not possible here: pulling Docker images (registry blocked) → BL-03.
 
+## 2026-11-17 (evening) — Clay finish + AI art pipeline
+- World: ambient occlusion, bloom, vignette, SMAA; warm string lights on evening/night.
+- `docs/design/AI_ART_PROMPTS.md`: prompt pack for founder-generated art + image→3D path (Tripo3D/Meshy → Mixamo).
+
 ## 2026-11-17 — Universe v1 (visual transformation)
 - `/` is now a 3D isometric room (R3F) with a walking, recolourable character; objects open real event categories; light follows Baku time.
 - `/studio` avatar customisation (4 bodies, skin/hair/top/trousers, save/undo/reset, device-only).

@@ -5,6 +5,7 @@
 > Current home = "Companion World" (FD-01/02 in DECISION_LOG) — keep its structure; D1/D2 restyle it.
 
 **Universe v1 shipped (3D world `/`, `/studio`, editorial Discover — docs/design/ART_DIRECTION.md).**
+**Waiting on FA-06 art:** when files arrive → WebP, ASSET_MANIFEST, wire into window view / covers / character (see AI_ART_PROMPTS.md).
 **Next up:** (a) Studio v2: clothes/accessory slots + room items (needs more CC0 assets or FA-05 art);
 (b) TB-22 real map (MapLibre) as the separate city tool; (c) event page `/e/[id]` in the editorial style with cover;
 (d) WebGL-less fallback polish + low-end Android check; (e) then TB-06 auth.
