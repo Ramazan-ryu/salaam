@@ -34,3 +34,6 @@ First CI run failed: Turborepo strict env mode hid `TEST_DATABASE_URL` from jest
 - Location: precise geohashes rejected; radius filter works; location answers are `private, no-store`.
 - No invented prices; unknown start time is flagged; language fallback works.
 - Synthetic data is invisible in production; staff endpoints are closed without real auth.
+
+## 2026-11-17 — Universe v1
+`pnpm typecheck` ✓ · `pnpm test` ✓ (API 38/38) · `pnpm build` ✓ · visual captures: docs/design/VISUAL_TEST_RESULTS.md (8 screens, 0 page errors).

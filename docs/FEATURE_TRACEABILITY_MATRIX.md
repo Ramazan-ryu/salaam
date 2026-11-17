@@ -89,3 +89,9 @@ Statuses follow the master directive: NOT_STARTED · DESIGNED · IN_PROGRESS · 
 - A row moves to TESTED only with a passing automated test **and** visual evidence in `design/screenshots/`.
 - Concept/mockup images are never used as evidence for an implemented screen.
 - When a feature changes its API, update the row in the same commit.
+
+| Feature | Screen | API | Module | Tests | Screenshot | Status |
+|---|---|---|---|---|---|---|
+| My World (3D home) | `/` (world) | `GET /v1/discover` | `apps/web/src/world` | build + visual | after/20–23 | IMPLEMENTED |
+| Avatar Studio | `/studio` | — (device storage) | `world/StudioHome.tsx` | build + visual | after/24–25 | IMPLEMENTED |
+| Experiences (editorial Discover) | `/discover` | `GET /v1/discover` | `(public)/explore-card.tsx`, `covers.tsx` | build + visual | after/26–27 | IMPLEMENTED |

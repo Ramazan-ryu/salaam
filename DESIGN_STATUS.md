@@ -17,3 +17,6 @@
 Shareable preview: **https://claude.ai/artifact/GMnhhEdrQAW9ADZXbxbLYH** — a static snapshot of the real running pages (az/ru/en, home/discover/near me/event pages, sample data). Rebuild: run the app, then `python3 infra/scripts/preview/capture.py && python3 infra/scripts/preview/build.py`, republish. It is a snapshot, not a live deployment.
 
 Screenshots in `design/screenshots/` are real captures of the running app (Chrome via Playwright), not mockups.
+
+## Universe v1 (2026-11-17)
+World `/` IMPLEMENTED · Studio `/studio` IMPLEMENTED (colours/bodies) · Experiences Discover IMPLEMENTED · Event page restyle NOT_STARTED · Real map NOT_STARTED (TB-22) · Original character art BLOCKED on FA-05.

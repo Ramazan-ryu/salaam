@@ -10,3 +10,4 @@ Only things Claude genuinely cannot do. Each is asked once; status is kept here.
 | FA-04 | Get the organizer terms reviewed | Needed before organizers submit in production | Lawyer reviews draft terms in docs (QL-07) | OPEN |
 | FA-05 | (Optional) Connect Figma | Only if you want designs inside Figma rather than the design canvas | Connect a Figma connector in claude.ai | OPTIONAL |
 | FA-06 | Decide sign-in costs if S-AUTH recommends a paid option (e.g. SMS OTP) | Claude may not create paid accounts | Claude will put the comparison and price here | WAITING (TB-06) |
+| FA-05 | 2026-11-17 | **Optional, for Salaam-original look:** decide whether to commission a 3D character artist (own anatomy, faces, outfits; GLB with Skin/Hair/Shirt/Pants materials + Idle/Walk/PickUp/Victory). Current CC0 placeholders work meanwhile. | Budget/product | OPEN |

@@ -2,11 +2,11 @@ import Link from 'next/link';
 import { DICTS, fmtKm, fmtToday, fmtWhen, greeting, type Dict, type Locale } from '@/lib/i18n';
 import { getLocale } from '@/lib/locale-server';
 import { onePerEvent, priceLabel, serverGet, type DiscoverResponse, type OccurrenceItem } from '@/lib/public-api';
-import { LangSwitch, TopNav } from './chrome';
+import { LangSwitch, TopNav } from '../chrome';
 import { MOODS, type Mood } from '@/lib/moods';
-import { CompanionWorld, ITEM_ICONS, ITEM_TONES, type WorldItem } from './companion-world';
-import { EventCard, PinIcon } from './components';
-import { Logo, timeOfDay, type TimeOfDay } from './scene';
+import { CompanionWorld, ITEM_ICONS, ITEM_TONES, type WorldItem } from '../companion-world';
+import { EventCard, PinIcon } from '../components';
+import { Logo, timeOfDay, type TimeOfDay } from '../scene';
 
 export const dynamic = 'force-dynamic';
 
@@ -112,7 +112,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
               ) : (
                 <p className="bubble-title">
                   {res.ok ? t.emptyLens : t.apiDown}{' '}
-                  {res.ok && lens !== 'weekend' && <Link href={`/?lens=weekend${moodQ}`}>{t.tryWeekend}</Link>}
+                  {res.ok && lens !== 'weekend' && <Link href={`/classic?lens=weekend${moodQ}`}>{t.tryWeekend}</Link>}
                 </p>
               )
             }
@@ -123,7 +123,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
             {moodPills.map((p) => (
               <Link
                 key={p.label}
-                href={`/?lens=${lens}${p.key ? `&mood=${p.key}` : ''}`}
+                href={`/classic?lens=${lens}${p.key ? `&mood=${p.key}` : ''}`}
                 className="mood-pill"
                 aria-current={p.key === mood ? 'true' : undefined}
               >
@@ -134,7 +134,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ l
           </nav>
           <nav className="chips" aria-label={t.when}>
             {LENSES.map((l) => (
-              <Link key={l} href={`/?lens=${l}${moodQ}`} className="chip" aria-current={l === lens ? 'true' : undefined}>
+              <Link key={l} href={`/classic?lens=${l}${moodQ}`} className="chip" aria-current={l === lens ? 'true' : undefined}>
                 {t[l]}
               </Link>
             ))}

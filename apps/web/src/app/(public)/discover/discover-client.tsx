@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { coarseGeohash } from '@/lib/geohash';
 import { DICTS, type Locale } from '@/lib/i18n';
 import { onePerEvent, type Category, type DiscoverResponse } from '@/lib/public-api';
-import { EventCard } from '../components';
+import { ExploreCard } from '../explore-card';
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 type Lens = 'now' | 'tonight' | 'weekend';
@@ -135,11 +135,16 @@ export function DiscoverClient({
           </div>
         )}
         {items.length > 0 && (
-          <div className="cards discover-grid">
-            {items.map((i) => (
-              <EventCard key={i.id} item={i} t={t} locale={locale} />
-            ))}
-          </div>
+          <>
+            <ExploreCard item={items[0]!} t={t} locale={locale} featured />
+            {items.length > 1 && (
+              <div className="ex-grid">
+                {items.slice(1).map((i, n) => (
+                  <ExploreCard key={i.id} item={i} t={t} locale={locale} seed={n + 1} />
+                ))}
+              </div>
+            )}
+          </>
         )}
         {items.some((i) => i.attribution.synthetic) && <p className="note" style={{ margin: 0 }}>{t.sample}</p>}
       </section>

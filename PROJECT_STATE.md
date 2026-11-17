@@ -10,6 +10,10 @@ A visitor can open the avatar-first home, switch Now / Tonight / Weekend, find e
 area, open an event page and add it to their calendar — in Azerbaijani, Russian or English. Staff can review
 organizer submissions and publish them; nothing becomes public without a person approving it.
 
+**Universe v1 (2026-11-17):** home is a 3D world with a living character (`/`), avatar Studio (`/studio`) and a dark
+editorial Discover. Art is CC0 placeholder 3D; Salaam-original character art needs an artist (FA-05).
+See `docs/design/ART_DIRECTION.md`.
+
 ## Completed milestones
 
 | ID | Milestone | Evidence |
@@ -17,6 +21,7 @@ organizer submissions and publish them; nothing becomes public without a person 
 | M0 | Phase 0 analysis, Phase 1 docs + 20 ADRs, Phase 1.1 corrections + P-0 kit | `docs/`, commits b72250a, 40f300f |
 | M1-a | Visual first look: home Concepts A & C | Design canvas (link in docs/README.md) |
 | S1 | API + staff web: catalog, sources, organizer submissions, review queue, human publish, discovery | commit 1f9a13c, 29 tests |
+| UV1 | Universe v1: 3D world, Studio, editorial Discover | `design/screenshots/after/20–27`, 38 tests |
 | M-VS1 | Public web slice (home, discover, nearby, details, ics), Docker env, CI, backups, traceability | this commit, 31 tests, `design/screenshots/01–08` |
 
 ## Quality gates (directive §23)

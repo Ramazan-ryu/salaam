@@ -27,3 +27,8 @@ This file records engineering decisions taken autonomously during implementation
 | ED-15 | 2026-11-17 | Swagger UI from `swagger-ui-dist` (Apache-2.0) served by the API, non-production only | No CDN, no extra service | Separate docs site | Yes |
 | ED-16 | 2026-11-17 | Public `GET /v1/places/:id` and `/v1/categories` return explicit public shapes | Contract work found raw DB rows (normalized names, geometry, timestamps) exposed | — | No (privacy/hygiene) |
 | ED-12 | 2026-11-17 | Discover responses: `Cache-Control: private, no-store` when an area is sent, `Vary` on language/area | API spec privacy rule | — | No (privacy rule) |
+| FD-03 | 2026-11-17 | **Founder direction:** home is a world the character lives in (My World / Character / City / Experiences / Studio); real map stays a separate tool | "SALAAM UNIVERSE" brief | Card home with avatar | Yes |
+| ED-21 | 2026-11-17 | Hybrid art direction: isometric 3D room for World/Studio, dark editorial for Experiences (4 directions scored in docs/design/ART_DIRECTION.md) | Best fit to brief, feasible now | Painterly 2D, 3D city, editorial-only | Yes |
+| ED-22 | 2026-11-17 | React Three Fiber 9 + drei + three 0.187; CC0 GLB assets (Quaternius characters, KayKit furniture) as placeholders | Runs in browser, MIT/CC0, renderer-independent scene + avatar schema keeps art swappable | Babylon.js, Spline (vendor), commissioned art (no budget yet) | Yes |
+| ED-23 | 2026-11-17 | Avatar config stored on device only (localStorage) until accounts exist | No personal data on the server before auth/consent | Server profile | Yes |
+| ED-24 | 2026-11-17 | Original SVG category covers as fallback event imagery | No unlicensed photos; categories readable at a glance | Stock photos | Yes |

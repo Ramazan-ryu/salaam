@@ -13,7 +13,7 @@ export default async function DiscoverPage({ searchParams }: { searchParams: Pro
   const sp = await searchParams;
   const cats = await serverGet<Category[]>('/v1/categories', locale);
   return (
-    <main>
+    <main className="mode-explore">
       <header className="pub-header">
         <h1 className="pub-hello">{DICTS[locale].discover}</h1>
         <div style={{ display: 'flex', gap: 18, alignItems: 'center' }}>

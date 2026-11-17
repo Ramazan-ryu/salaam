@@ -35,6 +35,13 @@ Newest first. Short, factual entries; details live in commits.
 - Problems solved: Postgres had stopped (stale pid) → restarted; Chrome lacks az date data → hand formatter; card/chip links inherited link colour → CSS; API image carried dev tools → separate prod-deps stage; restore errors on extension objects → filtered TOC, `--exit-on-error`.
 - Not possible here: pulling Docker images (registry blocked) → BL-03.
 
+## 2026-11-17 — Universe v1 (visual transformation)
+- `/` is now a 3D isometric room (R3F) with a walking, recolourable character; objects open real event categories; light follows Baku time.
+- `/studio` avatar customisation (4 bodies, skin/hair/top/trousers, save/undo/reset, device-only).
+- Discover → dark editorial "Experiences" with featured hero and original category covers; nav = My world / Discover / Studio.
+- Fixed: curtain rod line, mobile camera, label clutter, studio framing, sheet overlap. Old home kept at `/classic`.
+- Docs: ART_DIRECTION, WORLD_RENDERING_SPEC, VISUAL_TEST_RESULTS; ASSET_MANIFEST; screenshots before/after.
+
 ## 2026-11-17 — S1 API + staff web
 - NestJS API with catalog, sources, organizer submissions, review queue, human-only publication, discovery; Next.js staff web; 29 tests against PostGIS.
 - Fixed: drizzle-kit quoting `geography` type; jest env loading; enum names in tests.

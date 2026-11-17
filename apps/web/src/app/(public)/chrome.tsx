@@ -42,11 +42,18 @@ export function TabBar({ locale }: { locale: Locale }) {
     <nav className="pub-tabbar" aria-label="Menu">
       <Link href="/" aria-current={!discover ? 'page' : undefined}>
         <HomeIcon />
-        {t.home}
+        {t.navWorld}
       </Link>
       <Link href="/discover" aria-current={discover ? 'page' : undefined}>
         <CompassIcon />
         {t.discover}
+      </Link>
+      <Link href="/studio">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <circle cx="12" cy="7" r="4" />
+          <path d="M5 21c1-4 4-6 7-6s6 2 7 6" />
+        </svg>
+        {t.navStudio}
       </Link>
     </nav>
   );
@@ -58,11 +65,12 @@ export function TopNav({ locale }: { locale: Locale }) {
   return (
     <nav className="pub-topnav" aria-label="Menu">
       <Link href="/" aria-current={path === '/' ? 'page' : undefined}>
-        {t.home}
+        {t.navWorld}
       </Link>
       <Link href="/discover" aria-current={path.startsWith('/discover') ? 'page' : undefined}>
         {t.discover}
       </Link>
+      <Link href="/studio">{t.navStudio}</Link>
     </nav>
   );
 }
