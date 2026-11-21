@@ -4,6 +4,8 @@ Status: governing product and visual direction · written 2026-11-21 from the fo
 
 This document turns the founder's long-form creative direction into decisions that can guide implementation. It complements `CREATIVE_DIRECTIVE.md`, `ART_DIRECTION.md`, and `WORLD_RENDERING_SPEC.md`; it does not replace their technical detail.
 
+Local product and API references supplied by the founder are analyzed in [`LOCAL_PRODUCT_REFERENCES.md`](./LOCAL_PRODUCT_REFERENCES.md). Extract principles from those services; do not copy their assets, interfaces, catalogues, or assume their APIs are available.
+
 ## 1. The product in one sentence
 
 Salaam helps a person move from “I have free time and do not know what to do” to a trusted, personal plan in the real city around them.

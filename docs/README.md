@@ -90,6 +90,7 @@ Legal content is **not legal advice** ([LEGAL_AND_HOSTING_OPTIONS.md](./LEGAL_AN
 | 36 | [DOCKER_ARCHITECTURE.md](./DOCKER_ARCHITECTURE.md) | **New:** compose profiles, images, health, backups | 0.3 |
 | 37 | [LOCAL_DEVELOPMENT.md](./LOCAL_DEVELOPMENT.md) | **New:** one-command start guide, Windows/macOS/Linux | 0.3 |
 | 38 | [design/CREATIVE_DIRECTION_BIBLE.md](./design/CREATIVE_DIRECTION_BIBLE.md) | Product and visual principles, connected-world experience, implementation quality bar | 1.0 |
+| 39 | [design/LOCAL_PRODUCT_REFERENCES.md](./design/LOCAL_PRODUCT_REFERENCES.md) | Founder-supplied Baku product references, design principles, API and partnership feasibility notes | 1.0 |
 | — | [`p0/`](./p0/) | **New:** CSV templates (items, sources, pilot metrics, interviews, outreach, time log) | 0.2 |
 | — | [adr/README.md](./adr/README.md) | ADR index (21 ADRs; ADR-0010 reopened) | Proposed |
 

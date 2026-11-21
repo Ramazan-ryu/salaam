@@ -4,6 +4,8 @@ Status: Draft 0.1 · 2026-11-14 · Related: [DATA_SOURCES_REGISTER.md](./DATA_SO
 
 > Every claim below carries a source and the date it was checked. "Secondary" means a non-official source (news, aggregator, review site); such claims must be re-confirmed against the provider's own documentation or by direct contact before engineering depends on them. Platform terms change; re-check each item before building its connector.
 
+> **Update 2026-11-21:** The founder-supplied provider review in [LOCAL_PRODUCT_REFERENCES.md](./design/LOCAL_PRODUCT_REFERENCES.md) is the current authority for CineMastercard, Park Cinema, iTicket, Wolt, Bolt, EduMap, Alinino, Baku Book Center, Libraff, and Eventeam. It supersedes older API status wording below where inconsistent. In particular, Bolt's official rider support says no public or private APIs are currently offered; Wolt's documented APIs are partner/merchant workflows, not open consumer discovery; Eventeam's terms restrict systematic downloads for database creation.
+
 ## 1. Classification summary
 
 | Provider / source | Now | Target | Key limitation |
@@ -12,10 +14,13 @@ Status: Draft 0.1 · 2026-11-14 · Related: [DATA_SOURCES_REGISTER.md](./DATA_SO
 | Instagram — accounts that have not authorized Salaam | Type 5 (except gated Business Discovery) | — | Not permitted at scale; Hashtag Search capped |
 | Facebook Pages | Type 5 until researched | ? | [UNVERIFIED] Page public content access requires review |
 | Telegram channels | Research needed | Type 1 (bot added by channel owner) | [UNVERIFIED] mechanics and terms |
-| iTicket.az | Type 4 | Type 2 | No public API found |
-| CineMastercard / Park Cinema / Nizami | Type 4 + manual curation | Type 2 | No public API found |
-| Wolt | Type 4 | Type 2 | Merchant-side APIs only |
-| Bolt | Type 4 | Type 2 | No public ride-booking API |
+| iTicket.az | Type 4 | Type 2 | No public third-party API documentation identified; partner approval needed |
+| CineMastercard / Park Cinema / Nizami | Type 4 | Type 2 | No public third-party showtime/booking API documentation identified |
+| Wolt | Type 4 | Type 2 only with approval | Partner/merchant APIs, not open consumer discovery |
+| Bolt | Type 4 | Not assumed | Official rider support says no public or private API currently offered |
+| EduMap, Alinino, Baku Book Center, Libraff | Type 4 | Type 2 only by agreement | No public third-party API/feed docs identified |
+| Eventeam | Type 4 link-out only | Type 2 only by written permission | Terms prohibit systematic download/storage for database creation |
+| McDonald's Azerbaijan, KFC Azerbaijan, BİR-İKİ | Type 4 | Type 2 only by agreement | No local public third-party restaurant/menu API docs identified |
 | APAR | Type 4 | Type 2 (station data) | No public API found |
 | Supermarkets (Bravo, Araz, OBA, Bazarstore) | Postponed | Type 2 | No public offer feeds found |
 | OpenStreetMap | Type 3 (open data, ODbL) | — | Attribution & share-alike obligations |
@@ -90,3 +95,23 @@ Status: Draft 0.1 · 2026-11-14 · Related: [DATA_SOURCES_REGISTER.md](./DATA_SO
 1. The product must deliver value with **organizer submissions + curator entry + owned-account connections + permitted feeds** alone.
 2. All "booking", "ordering" and "ride" actions are external links in the MVP.
 3. Every new source requires a `DS` record with terms reviewed **before** a connector is enabled ([DATA_SOURCES_REGISTER.md](./DATA_SOURCES_REGISTER.md)).
+
+## 4. Founder-supplied provider API review (2026-11-21)
+
+This review checked public provider material. “No public API docs identified” does not prove private partner access is unavailable. Do not implement a connector until the provider confirms access, permitted fields, freshness, rate limits, attribution, retention, and commercial-use terms in writing.
+
+| Provider | Current finding | Salaam path |
+|---|---|---|
+| CineMastercard / CinemaPlus | The official privacy notice mentions its first-party site/API, but no third-party developer API docs were identified. The described purchase flow processes account, session, seat, payment, and ticket data inside CinemaPlus. | Link to film/session; partner request before showtime sync or booking. |
+| Park Cinema | Film, language, venue, and date filters are visible on the public site; no developer API docs identified. | Link-out; do not scrape schedules or imply booking access. |
+| EduMap | The supplied site returned 403 to this research browser; no public API docs identified. | Organizer/provider submission or handoff. |
+| iTicket | Official material describes online ticketing, venue maps, organizer services, QR tickets, refunds, and an AI assistant; no public third-party API docs identified. | Ask for a documented partner feed/API; otherwise link to the official event. |
+| Wolt | Official APIs exist for merchant/retail integration. Wolt requires partner terms and credentials; restaurant onboarding includes a merchant and approval. This is not a public end-user restaurant search API. | Link to venue/order page now; only integrate with Wolt and merchant authorization. |
+| Bolt | Official rider support explicitly says Bolt currently offers no public or private APIs. Separate Bolt Business / Ride Booker products do not establish consumer ride API access. | Destination handoff to Bolt; no live fare, driver, ETA, or status in Salaam. |
+| Alinino / Baku Book Center / Libraff | No public third-party catalogue or event API docs identified. | Link to the provider; use only licensed feeds or directly submitted data. |
+| Eventeam | No public API docs identified. Published terms prohibit systematically downloading and storing platform information to build a database. | Do not scrape or bulk-copy. Require explicit written permission and supported feed/API. |
+| McDonald's Azerbaijan | No local third-party API docs identified. Its official McDelivery page directs customers to Wolt or Bolt Food. | Use an official handoff; no menu or order integration without a local agreement. |
+| KFC Azerbaijan | No local third-party API docs identified; the supplied homepage was not readable in this browser review. | Link to the official site or authorized delivery provider; no scraping or assumed API. |
+| BİR-İKİ Dönər | Official page exposes menu, delivery, branch, and external order destinations; no third-party API docs identified. | Link to the provider or use partner-supplied menu and branch data. |
+
+Primary sources: [Bolt API support](https://bolt.eu/en/support/articles/360017256060/), [Wolt developer FAQ](https://developer.wolt.com/docs/faq), [Wolt restaurant onboarding](https://developer.wolt.com/docs/getting-started/restaurant), [iTicket About](https://iticket.az/en/page/about), [CineMastercard privacy notice](https://web.cinemastercard.az/ru/privacy-policy), [Eventeam terms](https://eventeam.az/terms-conditions), [McDonald's Azerbaijan McDelivery](https://www.mcdonalds.az/mcdelivery), [BİR-İKİ Dönər](https://bir-iki.az/). Full design interpretation and each founder-supplied URL are in [LOCAL_PRODUCT_REFERENCES.md](./design/LOCAL_PRODUCT_REFERENCES.md).
