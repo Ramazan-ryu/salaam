@@ -52,3 +52,8 @@ Newest first. Short, factual entries; details live in commits.
 
 ## 2026-11-14…16 — Documentation phases
 - Phase 0 analysis, Phase 1 docs + ADRs, Phase 1.1 corrections + P-0 kit, home concept mockups.
+
+## 2026-11-21 — Event details editorial restyle
+- Reworked /e/[id] to use the existing category cover artwork as an image-first hero, with event facts, actions, trust status and source arranged for mobile and desktop.
+- Kept existing localized labels, lifecycle states, calendar export, map link, noindex handling for synthetic events, and unknown-time/price behavior.
+- Mobile and desktop runtime previews were captured at `design/screenshots/after/28-event-details-*`. Automated tests were not run; the full Docker image build still fails npm registry TLS verification inside the container.

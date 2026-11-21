@@ -6,7 +6,7 @@
 | Home Concept A "Companion Stage" | Hi-fi mockup | Superseded by Companion World | Design canvas |
 | Home Concept C "Docked Companion" | Hi-fi mockup | Not implemented (A chosen for slice; C kept for P-0 comparison) | Design canvas |
 | Discover screen | Implemented interface | Built from Concept A tokens | screenshots 03, 07 |
-| Event details | Implemented interface | Trust + source + unconfirmed fields visible | screenshots 04, 05 |
+| Event details | Implemented; editorial restyle in progress | Category cover hero, readable facts, actions, trust + source + unconfirmed fields | screenshots 04, 05 are pre-restyle; captures 28 mobile/desktop available; final artwork pending |
 | Staff portal | Implemented interface (utility styling) | Works; not yet in the public design language (TB-16) | screenshot 08 |
 | Avatar | v2 SVG rig: semi-stylised adult, clay-style shading, rim light, 3 moods + mixed, reduced-motion | **Not final art** — illustrated/3D-look rig via TB-18; image generation not available in this environment |
 | Scene | Baku waterfront by time of day, walkers, glowing windows | Implemented; screenshots 13–15 |
@@ -19,4 +19,4 @@ Shareable preview: **https://claude.ai/artifact/GMnhhEdrQAW9ADZXbxbLYH** — a s
 Screenshots in `design/screenshots/` are real captures of the running app (Chrome via Playwright), not mockups.
 
 ## Universe v1 (2026-11-17)
-World `/` IMPLEMENTED · Studio `/studio` IMPLEMENTED (colours/bodies) · Experiences Discover IMPLEMENTED · Event page restyle NOT_STARTED · Real map NOT_STARTED (TB-22) · Original character art BLOCKED on FA-05.
+World `/` IMPLEMENTED · Studio `/studio` IMPLEMENTED (colours/bodies) · Experiences Discover IMPLEMENTED · Event page restyle implemented in code; mobile/desktop captures 28 completed; category artwork remains placeholder · Real map NOT_STARTED (TB-22) · Original character art BLOCKED on FA-05.

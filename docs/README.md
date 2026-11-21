@@ -89,6 +89,7 @@ Legal content is **not legal advice** ([LEGAL_AND_HOSTING_OPTIONS.md](./LEGAL_AN
 | 35 | [FEATURE_TRACEABILITY_MATRIX.md](./FEATURE_TRACEABILITY_MATRIX.md) | **New:** design → working-feature pipeline, per-feature status | 0.3 |
 | 36 | [DOCKER_ARCHITECTURE.md](./DOCKER_ARCHITECTURE.md) | **New:** compose profiles, images, health, backups | 0.3 |
 | 37 | [LOCAL_DEVELOPMENT.md](./LOCAL_DEVELOPMENT.md) | **New:** one-command start guide, Windows/macOS/Linux | 0.3 |
+| 38 | [design/CREATIVE_DIRECTION_BIBLE.md](./design/CREATIVE_DIRECTION_BIBLE.md) | Product and visual principles, connected-world experience, implementation quality bar | 1.0 |
 | — | [`p0/`](./p0/) | **New:** CSV templates (items, sources, pilot metrics, interviews, outreach, time log) | 0.2 |
 | — | [adr/README.md](./adr/README.md) | ADR index (21 ADRs; ADR-0010 reopened) | Proposed |
 

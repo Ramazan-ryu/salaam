@@ -1,6 +1,6 @@
 # Project State
 
-Updated: 2026-11-17 · by Claude (autonomous execution directive, see CLAUDE.md §Autonomy)
+Updated: 2026-11-21 · by Codex
 
 ## Current status
 
@@ -38,7 +38,7 @@ See `docs/design/ART_DIRECTION.md`.
 
 ## Active work
 
-TB-06 spike S-AUTH (sign-in). See NEXT_ACTIONS.md.
+TB-06 spike S-AUTH (sign-in). Event details editorial restyle is implemented in code; mobile and desktop captures 28 are saved; final character and environment art remain placeholders. See NEXT_ACTIONS.md.
 
 ## Known risks (top 5; full list in docs/RISKS_AND_OPEN_QUESTIONS.md)
 

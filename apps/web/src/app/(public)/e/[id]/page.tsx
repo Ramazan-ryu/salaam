@@ -4,7 +4,8 @@ import { DICTS, fmtWhen, type Dict } from '@/lib/i18n';
 import { getLocale } from '@/lib/locale-server';
 import { priceLabel, serverGet, type OccurrenceItem } from '@/lib/public-api';
 import { LangSwitch } from '../../chrome';
-import { CategoryArt, TrustBadge } from '../../components';
+import { TrustBadge } from '../../components';
+import { CoverArt } from '../../covers';
 import { CalendarButton } from './calendar-button';
 
 export const dynamic = 'force-dynamic';
@@ -45,8 +46,11 @@ export default async function EventDetails({ params }: { params: Promise<{ id: s
   const t = DICTS[locale];
 
   const top = (
-    <header className="pub-header">
-      <Link href="/discover" style={{ fontWeight: 600, textDecoration: 'none', alignSelf: 'center' }}>
+    <header className="event-topbar">
+      <Link href="/discover" className="event-back">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="m15 18-6-6 6-6" />
+        </svg>
         {t.back}
       </Link>
       <LangSwitch locale={locale} />
@@ -55,7 +59,7 @@ export default async function EventDetails({ params }: { params: Promise<{ id: s
 
   if (!res.ok) {
     return (
-      <main>
+      <main className="mode-explore event-page">
         {top}
         <div className="section">
           <div className={res.status === 404 ? 'empty' : 'error-box'}>{res.status === 404 ? t.notFound : t.apiDown}</div>
@@ -74,18 +78,19 @@ export default async function EventDetails({ params }: { params: Promise<{ id: s
     : `${fmtWhen(item.startsAt, locale)}${item.endsAt ? `–${fmtWhen(item.endsAt, locale, { withDay: false })}` : ''}`;
 
   return (
-    <main>
+    <main className="mode-explore event-page">
       {top}
       {item.lifecycle === 'cancelled' && <p className="banner banner-bad" role="status">{t.cancelled}</p>}
       {item.lifecycle === 'postponed' && <p className="banner banner-bad" role="status">{t.postponed}</p>}
 
-      <section className="detail-hero" style={{ background: 'var(--surface)', border: '1px solid var(--line)' }}>
-        <CategoryArt category={item.event.categories[0]} />
+      <section className="detail-hero event-hero">
+        <div className="event-cover"><CoverArt category={item.event.categories[0]} seed={item.id.charCodeAt(0)} title={item.event.title ?? undefined} /></div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
           <TrustBadge item={item} t={t} />
           {item.attribution.synthetic && <span className="tag tag-sample">{t.sampleBadge}</span>}
         </div>
         <h1>{item.event.title}</h1>
+        <p className="event-hero-meta">{when} <span aria-hidden="true">·</span> {item.place.name}</p>
       </section>
 
       <dl className="facts" style={{ margin: '14px 16px 0' }}>

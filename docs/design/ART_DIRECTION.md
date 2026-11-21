@@ -60,7 +60,7 @@ Sample events stay labelled "Sample/Nümunə"; no invented times or prices; the 
 - WebGL is required for the world; without it the page still shows greeting + event panel.
 - First visit downloads ~3 MB of models (cached afterwards).
 
-See also `WORLD_RENDERING_SPEC.md` and `design/ASSET_MANIFEST.json`.
+See also `CREATIVE_DIRECTION_BIBLE.md`, `WORLD_RENDERING_SPEC.md` and `design/ASSET_MANIFEST.json`.
 
 ## 7. Path to the reference look (2026-11-17)
 Free finish added (AO, bloom, string lights). Final art comes from founder-generated AI images (`AI_ART_PROMPTS.md`) — character sheet, emotions, room reference, window city, event covers — and optionally image→3D (Tripo3D/Meshy) + Mixamo rig to replace the CC0 characters.

@@ -37,3 +37,7 @@ First CI run failed: Turborepo strict env mode hid `TEST_DATABASE_URL` from jest
 
 ## 2026-11-17 — Universe v1
 `pnpm typecheck` ✓ · `pnpm test` ✓ (API 38/38) · `pnpm build` ✓ · visual captures: docs/design/VISUAL_TEST_RESULTS.md (8 screens, 0 page errors).
+
+## 2026-11-21 — visual update
+
+- Automated tests were not run. The local database, API, and web app were started natively; the event route rendered HTTP 200 and mobile/desktop screenshots were captured in `design/screenshots/after/28-event-details-*`. The full Docker build was not verified because Corepack could not validate npm registry TLS inside the container.
